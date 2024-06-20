@@ -7,6 +7,7 @@ import 'package:get/get_core/src/get_main.dart';
 import '../widgets/floating_actionbar.dart';
 import '../widgets/horizontal_view_list.dart';
 import '../widgets/selectable_button.dart';
+import 'VenueSelectedScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -78,8 +79,13 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(height: MediaQuery.of(context).size.height * 0.025),
             HorizontalListView(items: items),
             Expanded(
-                child: Image.asset('assets/map_placeholder.png',
-                fit: BoxFit.cover,
+                child: GestureDetector(
+                  onTap: () {
+                    Get.to(() => VenueSelectedScreen());
+                  },
+                  child: Image.asset('assets/map_placeholder.png',
+                  fit: BoxFit.cover,
+                  ),
                 ),
               ),
           ],

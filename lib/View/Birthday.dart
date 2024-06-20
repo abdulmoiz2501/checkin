@@ -8,7 +8,9 @@ import '../constants/colors.dart';
 import 'GenderScreen.dart';
 
 class BirthdayPage extends StatefulWidget {
-  const BirthdayPage({super.key});
+  final String uid;
+  final String name;
+  const BirthdayPage({super.key, required this.uid, required this.name});
 
   @override
   State<BirthdayPage> createState() => _BirthdayPageState();
@@ -17,6 +19,8 @@ class BirthdayPage extends StatefulWidget {
 class _BirthdayPageState extends State<BirthdayPage> {
   TextEditingController _controller = TextEditingController();
   Color hintTextColor = Colors.grey;
+  int age = 0;
+
 
   void _showDatePicker() {
     DatePicker.showDatePicker(
@@ -27,11 +31,21 @@ class _BirthdayPageState extends State<BirthdayPage> {
       onConfirm: (date) {
         setState(() {
           _controller.text = "${date.day}/${date.month}/${date.year}";
+          age = _calculateAge(date);
         });
       },
       currentTime: DateTime.now(),
       locale:LocaleType.en,
     );
+  }
+  int _calculateAge(DateTime selectedDate) {
+    DateTime currentDate = DateTime.now();
+    int age = currentDate.year - selectedDate.year;
+    if (currentDate.month < selectedDate.month ||
+        (currentDate.month == selectedDate.month && currentDate.day < selectedDate.day)) {
+      age--;
+    }
+    return age;
   }
   @override
   Widget build(BuildContext context) {
@@ -118,7 +132,10 @@ class _BirthdayPageState extends State<BirthdayPage> {
               ),
               child: ElevatedButton(
                 onPressed: () {
-                  Get.to(() => GenderScreen());
+                  print('User ID: ${widget.uid}');
+                  print('Name: ${widget.name}');
+                  print('Age: $age');
+                  Get.to(() => GenderScreen(uid: widget.uid, name: widget.name, age: age));
                   print("Next pressed");
                 },
                 style: ElevatedButton.styleFrom(

@@ -1,14 +1,19 @@
+import 'package:checkin/View/HomeScreen.dart';
 import 'package:checkin/View/rules_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../constants/colors.dart';
+import '../services/auth_service.dart';
 import '../utils/theme/custom_themes/text_theme.dart';
 
 class OtpScreenLogin extends StatefulWidget {
-  const OtpScreenLogin({Key? key}) : super(key: key);
+  final String phoneNumber;
+  final String verificationId;
+  const OtpScreenLogin({Key? key, required this.phoneNumber, required this.verificationId}) : super(key: key);
 
   @override
   State<OtpScreenLogin> createState() => _OtpScreenLoginState();
@@ -16,19 +21,18 @@ class OtpScreenLogin extends StatefulWidget {
 
 class _OtpScreenLoginState extends State<OtpScreenLogin> {
   // Define focus nodes
-  final focusNodes = List<FocusNode>.generate(5, (index) => FocusNode());
-
+  final focusNodes = List<FocusNode>.generate(6, (index) => FocusNode());
   // Define controllers
   final controllers = List<TextEditingController>.generate(
-      5, (index) => TextEditingController());
+      6, (index) => TextEditingController());
 
   bool isRed = false;
-
+  final AuthService _authService = AuthService();
   // Function to move focus to the next field if a digit is entered
   void nextField(String value, int index) {
     if (value.isNotEmpty) {
       print(index);
-      if (index < 4) {
+      if (index < 5) {
         FocusScope.of(context).requestFocus(focusNodes[index + 1]);
       } else {
         FocusScope.of(context)
@@ -38,17 +42,29 @@ class _OtpScreenLoginState extends State<OtpScreenLogin> {
     checkInput();
   }
 
+
   void checkInput() {
-    String currentInput =
-    controllers.map((controller) => controller.text).join('');
-    if (currentInput == '11111') {
+    String currentInput = controllers.map((controller) => controller.text).join('');
+    if (currentInput.length == 6) {
+      _verifyOtp(currentInput);
+    }
+  }
+
+  void _verifyOtp(String otp) async {
+    try {
+      User? user = await _authService.confirmVerificationCode(widget.verificationId, otp);
+      if (user != null) {
+        Get.to(() => RulesScreen());
+      } else {
+        setState(() {
+          isRed = true;
+        });
+      }
+    } catch (e) {
       setState(() {
         isRed = true;
       });
-    } else {
-      setState(() {
-        isRed = false;
-      });
+      print('Failed to sign in: $e');
     }
   }
 
@@ -105,7 +121,7 @@ class _OtpScreenLoginState extends State<OtpScreenLogin> {
                     height: MediaQuery.of(context).size.height * 0.02,
                   ),
                   Text(
-                    'We\'ve sent an SMS with an activation code to your phone +61 431 111 111',
+                    'We\'ve sent an SMS with an activation code to your phone ${widget.phoneNumber}',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.normal,
@@ -117,7 +133,7 @@ class _OtpScreenLoginState extends State<OtpScreenLogin> {
                     height: MediaQuery.of(context).size.height * 0.02,
                   ),
                   Row(
-                    children: List.generate(5, (index) {
+                    children: List.generate(6, (index) {
                       return Expanded(
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 5.0),
@@ -230,7 +246,8 @@ class _OtpScreenLoginState extends State<OtpScreenLogin> {
               ),
               child: ElevatedButton(
                 onPressed: () {
-                  Get.to(() => RulesScreen());
+                  String otp = controllers.map((controller) => controller.text).join('');
+                  _verifyOtp(otp);
                   print("Next pressed");
                 },
                 style: ElevatedButton.styleFrom(

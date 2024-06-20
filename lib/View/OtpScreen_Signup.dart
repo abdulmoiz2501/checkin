@@ -20,15 +20,15 @@ class OtpScreenSignUp extends StatefulWidget {
 }
 
 class _OtpScreenSignUpState extends State<OtpScreenSignUp> {
-  final focusNodes = List<FocusNode>.generate(5, (index) => FocusNode());
-  final controllers = List<TextEditingController>.generate(5, (index) => TextEditingController());
+  final focusNodes = List<FocusNode>.generate(6, (index) => FocusNode());
+  final controllers = List<TextEditingController>.generate(6, (index) => TextEditingController());
   bool isRed = false;
   final AuthService _authService = AuthService(); // Initialize AuthService
 
   void nextField(String value, int index) {
     if (value.isNotEmpty) {
       print(index);
-      if (index < 4) {
+      if (index < 5) {
         FocusScope.of(context).requestFocus(focusNodes[index + 1]);
       } else {
         FocusScope.of(context).unfocus(); // to hide the keyboard if the last field is filled
@@ -39,7 +39,7 @@ class _OtpScreenSignUpState extends State<OtpScreenSignUp> {
 
   void checkInput() {
     String currentInput = controllers.map((controller) => controller.text).join('');
-    if (currentInput.length == 5) {
+    if (currentInput.length == 6) {
       _verifyOtp(currentInput);
     }
   }
@@ -132,7 +132,7 @@ class _OtpScreenSignUpState extends State<OtpScreenSignUp> {
                   Form(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: List.generate(5, (index) {
+                      children: List.generate(6, (index) {
                         return Container(
                           width: 60,
                           child: TextFormField(
@@ -216,6 +216,7 @@ class _OtpScreenSignUpState extends State<OtpScreenSignUp> {
             ),
             child: ElevatedButton(
               onPressed: () {
+
                 String otp = controllers.map((controller) => controller.text).join('');
                 _verifyOtp(otp);
               },

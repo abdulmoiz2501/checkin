@@ -7,7 +7,10 @@ import '../widgets/gender_selection_tile.dart';
 import 'SexualityScreen.dart';
 
 class GenderScreen extends StatefulWidget {
-  const GenderScreen({super.key});
+  final String uid;
+  final String name;
+  final int age;
+  const GenderScreen({super.key, required this.uid, required this.name, required this.age});
 
   @override
   State<GenderScreen> createState() => _GenderScreenState();
@@ -110,8 +113,17 @@ class _GenderScreenState extends State<GenderScreen> {
                     child: ElevatedButton(
                       onPressed: () {
 
-                        Get.to(() => SexualityScreen());
+                        Get.to(() => SexualityScreen(
+                            uid: widget.uid,
+                            name: widget.name,
+                            age: widget.age,
+                            gender: selectedGender
+                        ));
                         print("Next pressed");
+                        print('User ID: ${widget.uid}');
+                        print('Name: ${widget.name}');
+                        print('Age: ${widget.age}');
+                        print('gender: $selectedGender');
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.transparent,

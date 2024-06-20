@@ -1,13 +1,52 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 import '../constants/colors.dart';
+import '../services/user_service.dart';
 import 'UseLocationScreen.dart';
 
-class AddNoteScreen extends StatelessWidget {
-  const AddNoteScreen({super.key});
+class AddNoteScreen extends StatefulWidget {
+  final String uid;
+  final String name;
+  final int age;
+  final String gender;
+  final String sexuality;
+
+  const AddNoteScreen({
+    Key? key,
+    required this.uid,
+    required this.name,
+    required this.age,
+    required this.gender,
+    required this.sexuality,
+  }) : super(key: key);
+
+  @override
+  _AddNoteScreenState createState() => _AddNoteScreenState();
+}
+
+class _AddNoteScreenState extends State<AddNoteScreen> {
+  final TextEditingController _noteController = TextEditingController();
+  final UserService _userService = UserService();
+
+  Future<void> _saveUserDetails(
+      String uid, String name, int age, String gender, String sexuality, String note) async {
+    await _userService.saveUserDetails(
+      uid: uid,
+      name: name,
+      age: age,
+      gender: gender,
+      sexuality: sexuality,
+      note: note,
+    );
+  }
+
+  @override
+  void dispose() {
+    _noteController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,14 +55,12 @@ class AddNoteScreen extends StatelessWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: SizedBox(
-            width: 20, // Specify the desired width
-            height: 20, // Specify the desired height
-            child: Image.asset('assets/back_arrow.png'), // Load your SVG image
+            width: 20,
+            height: 20,
+            child: Image.asset('assets/back_arrow.png'),
           ),
-          // Load your SVG image
           onPressed: () {
             Get.back();
-            // Action when the leading icon is pressed
             print("Leading icon pressed");
           },
         ),
@@ -50,18 +87,19 @@ class AddNoteScreen extends StatelessWidget {
                     height: MediaQuery.of(context).size.height * 0.03,
                   ),
                   Container(
-                    height: 120, // Adjust the height as needed
+                    height: 120,
                     decoration: BoxDecoration(
-                      border: Border.all(color: Color(0xFFD3D4D5)), // Lighter grey outline
-                      borderRadius: BorderRadius.circular(10), // Rounded corners
+                      border: Border.all(color: Color(0xFFD3D4D5)),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 2.0), // Adjust padding as needed
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 2.0),
                       child: TextField(
+                        controller: _noteController,
                         decoration: InputDecoration(
-                          hintText: 'What\'s on your mind?', // Lighter grey hint text
-                          hintStyle: TextStyle(color: Color(0xFF909396), fontSize: 16), // Lighter grey hint text color
-                          border: InputBorder.none, // Remove the default underline border
+                          hintText: 'What\'s on your mind?',
+                          hintStyle: TextStyle(color: Color(0xFF909396), fontSize: 16),
+                          border: InputBorder.none,
                         ),
                       ),
                     ),
@@ -69,7 +107,6 @@ class AddNoteScreen extends StatelessWidget {
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.01,
                   ),
-
                   Text(
                     'Don\'t stress if you don\'t know what to write, you can change it any time!',
                     style: TextStyle(
@@ -124,8 +161,6 @@ class AddNoteScreen extends StatelessWidget {
                       color: Colors.grey,
                     ),
                   ),
-
-
                 ],
               ),
             ),
@@ -139,14 +174,22 @@ class AddNoteScreen extends StatelessWidget {
                 ),
               ),
               child: ElevatedButton(
-                onPressed: () {
-
+                onPressed: () async {
+                  String note = _noteController.text.trim();
+                  await _saveUserDetails(
+                    widget.uid,
+                    widget.name,
+                    widget.age,
+                    widget.gender,
+                    widget.sexuality,
+                    note,
+                  );
                   Get.to(() => GetLocationScreen());
                   print("Next pressed");
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,
-                  elevation: 0, // Remove shadow
+                  elevation: 0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25),
                   ),
@@ -161,7 +204,7 @@ class AddNoteScreen extends StatelessWidget {
                   child: Container(
                     alignment: Alignment.center,
                     child: Text(
-                      "Next ",
+                      "Next",
                       style: TextStyle(
                         color: textInvertColor,
                         fontFamily: 'SFProDisplay',
@@ -172,7 +215,7 @@ class AddNoteScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.03,)
+            SizedBox(height: MediaQuery.of(context).size.height * 0.03),
           ],
         ),
       ),

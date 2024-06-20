@@ -2,6 +2,8 @@ import 'package:checkin/View/HomeScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../View/VenuesScreen.dart';
+
 class BottomNavigation extends StatefulWidget {
   const BottomNavigation({super.key});
 
@@ -67,7 +69,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
         index: _selectedIndex,
         children: const [
           HomeScreen(),
-          Center(child: Text('Favorites Screen')),
+          VenueScreen(),
           Center(child: Text('Chat Screen')),
           Center(child: Text('People Screen')),
           Center(child: Text('Profile Screen')),

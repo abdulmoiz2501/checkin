@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final DatabaseReference _databaseReference = FirebaseDatabase.instance.ref().child('users');
+
 
   // Sign Up with Phone Number
   Future<void> signUpWithPhoneNumber(String phoneNumber, Function(String) codeSentCallback) async {
@@ -45,7 +48,7 @@ class AuthService {
     );
   }
 
-  // Confirm Verification Code
+
   Future<User?> confirmVerificationCode(String verificationId, String smsCode) async {
     PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode);
     UserCredential userCredential = await _auth.signInWithCredential(credential);
@@ -55,11 +58,12 @@ class AuthService {
   // Check if User Exists
   Future<bool> userExists(String phoneNumber) async {
     try {
-      // Attempt to sign in the user to check if they exist
+      // checking if umber exist in firebase
       List<String> methods = await _auth.fetchSignInMethodsForEmail(phoneNumber);
       return methods.isNotEmpty;
     } catch (e) {
-      return false; // Error indicates user does not exist
+      return false; // if no user
     }
   }
+
 }

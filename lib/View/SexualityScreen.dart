@@ -7,7 +7,11 @@ import '../widgets/selectable_button.dart';
 import 'AddPicturesScreen.dart';
 
 class SexualityScreen extends StatefulWidget {
-  const SexualityScreen({super.key});
+  final String uid;
+  final String name;
+  final int age;
+  final String gender;
+  const SexualityScreen({super.key, required this.uid, required this.name, required this.age, required this.gender});
 
   @override
   State<SexualityScreen> createState() => _SexualityScreenState();
@@ -101,8 +105,19 @@ class _SexualityScreenState extends State<SexualityScreen> {
               child: ElevatedButton(
                 onPressed: () {
 
-                  Get.to(() => AddPicturesScreen());
+                  Get.to(() => AddPicturesScreen(
+                    uid: widget.uid,
+                    name: widget.name,
+                    age: widget.age,
+                    gender: widget.gender,
+                    sexuality: selectedOption,
+                  ));
                   print("Next pressed");
+                  print('User ID: ${widget.uid}');
+                  print('Name: ${widget.name}');
+                  print('Age: ${widget.age}');
+                  print('gender: ${widget.gender}');
+                  print('sexuality: $selectedOption');
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,

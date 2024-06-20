@@ -43,6 +43,8 @@ dependencies:
   iconsax: ^0.0.8
   firebase_core: ^3.1.0
   firebase_auth: ^5.1.0
+  firebase_database: ^11.0.1
+  shared_preferences: ^2.2.3
 
 
 dev_dependencies:

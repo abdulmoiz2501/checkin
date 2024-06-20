@@ -59,7 +59,7 @@ class _VenueScreenState extends State<VenueScreen> {
             horizontal: MediaQuery.of(context).size.width * 0.053),
         child: Column(
           children: [
-            SizedBox(height: 15),
+            SizedBox(height:15),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: SelectableButtonGroup(
@@ -78,6 +78,7 @@ class _VenueScreenState extends State<VenueScreen> {
                 },
               ),
             ),
+            SizedBox(height:10),
             Expanded(
               child: ListView(
                 children: [

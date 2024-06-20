@@ -1,13 +1,36 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import '../constants/colors.dart';
+import '../services/user_service.dart';
 import 'ConnectAccount.dart';
 
-class NameScreen extends StatelessWidget {
+class NameScreen extends StatefulWidget {
   const NameScreen({super.key});
+
+  @override
+  _NameScreenState createState() => _NameScreenState();
+}
+
+class _NameScreenState extends State<NameScreen> {
+  final TextEditingController _nameController = TextEditingController();
+ /* final UserService _userService = UserService();
+  Future<void> _saveUserDetails(String uid, String name) async {
+    // Dummy data for gender, note, and sexuality
+    String gender = "gender_placeholder";
+    String note = "note_placeholder";
+    String sexuality = "sexuality_placeholder";
+
+    await _userService.saveUserDetails(
+      uid: uid,
+      name: name,
+      gender: gender,
+      note: note,
+      sexuality: sexuality,
+      age: age,
+    );
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +42,6 @@ class NameScreen extends StatelessWidget {
             height: 20, // Specify the desired height
             child: Image.asset('assets/back_arrow.png'), // Load your SVG image
           ),
-          // Load your SVG image
           onPressed: () {
             Get.back();
             // Action when the leading icon is pressed
@@ -79,8 +101,9 @@ class NameScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10), // Rounded corners
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 2.0), // Adjust padding as needed
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 2.0), // Adjust padding as needed
                       child: TextField(
+                        controller: _nameController,
                         decoration: InputDecoration(
                           hintText: 'Enter name', // Lighter grey hint text
                           hintStyle: TextStyle(color: hintTextColor, fontSize: 14), // Lighter grey hint text color
@@ -102,9 +125,23 @@ class NameScreen extends StatelessWidget {
                 ),
               ),
               child: ElevatedButton(
-                onPressed: () {
-                  Get.to(() => ConnectAccount());
-                  print("Next pressed");
+                onPressed: () async {
+                  String name = _nameController.text;
+                  User? user = FirebaseAuth.instance.currentUser;
+                  String? uid = user?.uid;
+                  if (uid != null && name.isNotEmpty) {
+                    print("UID: $uid");
+                    //await _saveUserDetails(uid, name);
+                    Get.to(() => ConnectAccount(uid: uid, name: name));
+                    print("Next pressed with UID: $uid and Name: $name");
+                  } else {
+                    if (uid == null) {
+                      print("Error: UID is empty");
+                    }
+                    if (name.isEmpty) {
+                      print("Error: Name is empty");
+                    }
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,

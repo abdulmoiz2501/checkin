@@ -7,7 +7,10 @@ import '../widgets/sign_in_button.dart';
 import 'Birthday.dart';
 
 class ConnectAccount extends StatelessWidget {
-  const ConnectAccount({super.key});
+  final String uid;
+  final String name;
+
+  const ConnectAccount({super.key, required this.uid, required this.name});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +22,6 @@ class ConnectAccount extends StatelessWidget {
             height: 20, // Specify the desired height
             child: Image.asset('assets/back_arrow.png'), // Load your SVG image
           ),
-          // Load your SVG image
           onPressed: () {
             Get.back();
             // Action when the leading icon is pressed
@@ -27,7 +29,6 @@ class ConnectAccount extends StatelessWidget {
           },
         ),
         actions: [
-
           TextButton(
             onPressed: () {
               // Action when Skip button is pressed
@@ -81,7 +82,7 @@ class ConnectAccount extends StatelessWidget {
               iconAssetPath: 'assets/apple.png',
               buttonText: "Continue with Apple",
               textColor: textInvertColor,
-              destinationWidget: BirthdayPage(),// Specify the text color
+              destinationWidget: BirthdayPage(uid: uid, name: name), // Pass uid and name
             ),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.02,
@@ -91,7 +92,7 @@ class ConnectAccount extends StatelessWidget {
               iconAssetPath: 'assets/google.png',
               buttonText: "Continue with Google",
               textColor: textBlackColor,
-              destinationWidget: BirthdayPage(),// Specify the text color
+              destinationWidget: BirthdayPage(uid: uid, name: name), // Pass uid and name
             ),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.02,
@@ -101,7 +102,7 @@ class ConnectAccount extends StatelessWidget {
               iconAssetPath: 'assets/facebook.png',
               buttonText: "Continue with Facebook",
               textColor: textInvertColor,
-              destinationWidget: BirthdayPage(),// Specify the text color
+              destinationWidget: BirthdayPage(uid: uid, name: name), // Pass uid and name
             ),
           ],
         ),
