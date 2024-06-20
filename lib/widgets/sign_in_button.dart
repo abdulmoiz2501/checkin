@@ -1,19 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+typedef ButtonPressedCallback = void Function();
 Widget customButton({
   required Color backgroundColor,
   required String iconAssetPath,
   required String buttonText,
   required Color textColor, // Specify the text color
-  required Widget destinationWidget, // Specify the destination widget for navigation
+  required ButtonPressedCallback onPressed, // Specify the destination widget for navigation
 }) {
   return ElevatedButton(
-    onPressed: () {
-      // Navigate to the specified widget
-      Get.to(() => destinationWidget);
-    },
+    onPressed: onPressed,
     style: ElevatedButton.styleFrom(
       backgroundColor: backgroundColor,
       elevation: 0, // Remove shadow

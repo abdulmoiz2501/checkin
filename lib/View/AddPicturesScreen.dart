@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import '../constants/colors.dart';
 import '../widgets/clickable_square_tile.dart';
 import 'AddNoteScreen.dart';
+import 'dart:io';
 
-class AddPicturesScreen extends StatelessWidget {
+class AddPicturesScreen extends StatefulWidget {
   final String uid;
   final String name;
   final int age;
@@ -19,6 +21,26 @@ class AddPicturesScreen extends StatelessWidget {
     required this.gender,
     required this.sexuality,
   }) : super(key: key);
+
+  @override
+  State<AddPicturesScreen> createState() => _AddPicturesScreenState();
+}
+
+class _AddPicturesScreenState extends State<AddPicturesScreen> {
+  final ImagePicker _picker = ImagePicker();
+  List<File?> _images = List<File?>.filled(4, null);
+
+  Future<void> _pickImage(int index) async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _images[index] = File(pickedFile.path);
+      });
+    }
+  }
+  List<String> _getImagePaths() {
+    return _images.where((file) => file != null).map((file) => file!.path).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +59,8 @@ class AddPicturesScreen extends StatelessWidget {
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.053),
+        padding: EdgeInsets.symmetric(
+            horizontal: MediaQuery.of(context).size.width * 0.053),
         child: Column(
           children: [
             Expanded(
@@ -74,11 +97,18 @@ class AddPicturesScreen extends StatelessWidget {
                       ),
                       itemCount: 4,
                       itemBuilder: (context, index) {
-                        return ClickableSquare(
+                        return GestureDetector(
                           onTap: () {
-                            // Handle the tap event here
-                            print('Square $index tapped');
+                            _pickImage(index);
                           },
+                          child: _images[index] != null
+                              ? Image.file(_images[index]!, fit: BoxFit.cover)
+                              : ClickableSquare(
+                                  onTap: () {
+                                    _pickImage(index);
+                                    print('Square $index tapped');
+                                  },
+                                ),
                         );
                       },
                     ),
@@ -97,19 +127,22 @@ class AddPicturesScreen extends StatelessWidget {
               ),
               child: ElevatedButton(
                 onPressed: () {
+                  List<String> imagePaths = _getImagePaths();
                   Get.to(() => AddNoteScreen(
-                    uid: uid,
-                    name: name,
-                    age: age,
-                    gender: gender,
-                    sexuality: sexuality,
-                  ));
+                        uid: widget.uid,
+                        name: widget.name,
+                        age: widget.age,
+                        gender: widget.gender,
+                        sexuality: widget.sexuality,
+                        imagePaths: imagePaths,
+                      ));
                   print("Next pressed");
-                  print('User ID: $uid');
-                  print('Name: $name');
-                  print('Age: $age');
-                  print('gender: $gender');
-                  print('sexuality: $sexuality');
+                  print('User ID: ${widget.uid}');
+                  print('Name: ${widget.name}');
+                  print('Age: ${widget.age}');
+                  print('gender: ${widget.gender}');
+                  print('sexuality: ${widget.sexuality}');
+                  print('Image paths: $imagePaths');
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,

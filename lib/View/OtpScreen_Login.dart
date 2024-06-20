@@ -1,10 +1,12 @@
 import 'package:checkin/View/HomeScreen.dart';
+import 'package:checkin/View/NameScreen.dart';
 import 'package:checkin/View/rules_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/colors.dart';
 import '../services/auth_service.dart';
@@ -54,7 +56,7 @@ class _OtpScreenLoginState extends State<OtpScreenLogin> {
     try {
       User? user = await _authService.confirmVerificationCode(widget.verificationId, otp);
       if (user != null) {
-        Get.to(() => RulesScreen());
+        await _checkCompletionStatusAndNavigate();
       } else {
         setState(() {
           isRed = true;
@@ -65,6 +67,16 @@ class _OtpScreenLoginState extends State<OtpScreenLogin> {
         isRed = true;
       });
       print('Failed to sign in: $e');
+    }
+  }
+
+  Future<void> _checkCompletionStatusAndNavigate() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isCompleted = prefs.getBool('isCompleted') ?? false;
+    if (isCompleted) {
+      Get.to(() => RulesScreen());
+    } else {
+      Get.to(() => NameScreen());
     }
   }
 

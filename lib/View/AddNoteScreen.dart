@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/colors.dart';
+import '../controllers/user_auth_controller.dart';
 import '../services/user_service.dart';
+import '../widgets/floating_actionbar.dart';
 import 'UseLocationScreen.dart';
 
 class AddNoteScreen extends StatefulWidget {
@@ -12,6 +15,7 @@ class AddNoteScreen extends StatefulWidget {
   final int age;
   final String gender;
   final String sexuality;
+  final List<String> imagePaths;
 
   const AddNoteScreen({
     Key? key,
@@ -20,6 +24,7 @@ class AddNoteScreen extends StatefulWidget {
     required this.age,
     required this.gender,
     required this.sexuality,
+    required this.imagePaths,
   }) : super(key: key);
 
   @override
@@ -30,7 +35,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
   final TextEditingController _noteController = TextEditingController();
   final UserService _userService = UserService();
 
-  Future<void> _saveUserDetails(
+  /*Future<void> _saveUserDetails(
       String uid, String name, int age, String gender, String sexuality, String note) async {
     await _userService.saveUserDetails(
       uid: uid,
@@ -40,7 +45,13 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
       sexuality: sexuality,
       note: note,
     );
+  }*/
+
+  Future<void> _setCompletionStatus(bool status) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isCompleted', status);
   }
+
 
   @override
   void dispose() {
@@ -50,6 +61,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(UserAuthController());
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -175,16 +187,31 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
               ),
               child: ElevatedButton(
                 onPressed: () async {
-                  String note = _noteController.text.trim();
-                  await _saveUserDetails(
+                  //String note = _noteController.text.trim();
+                  String note = "note";
+                  /*await _saveUserDetails(
                     widget.uid,
                     widget.name,
                     widget.age,
                     widget.gender,
                     widget.sexuality,
                     note,
-                  );
-                  Get.to(() => GetLocationScreen());
+                  );*/
+                  print('note: $note');
+                  final resp = await controller.signUpUser({
+                    'uid': widget.uid,
+                    'name': widget.name,
+                    'age': widget.age,
+                    'gender': widget.gender,
+                    'sexuality': widget.sexuality,
+                  }, widget.imagePaths, note);
+                  if(resp == true){
+                    print("User signed up successfully");
+                    await _setCompletionStatus(true);
+                    Get.to(() => GetLocationScreen());
+                  }else{
+                    showCustomSnackbar(context, Colors.red, 'Error signing up user');
+                  }
                   print("Next pressed");
                 },
                 style: ElevatedButton.styleFrom(

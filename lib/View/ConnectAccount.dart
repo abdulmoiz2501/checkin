@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/colors.dart';
+import '../services/auth_service.dart';
+import '../widgets/email_input_dialog.dart';
 import '../widgets/sign_in_button.dart';
 import 'Birthday.dart';
 
@@ -10,7 +13,28 @@ class ConnectAccount extends StatelessWidget {
   final String uid;
   final String name;
 
-  const ConnectAccount({super.key, required this.uid, required this.name});
+   ConnectAccount({super.key, required this.uid, required this.name});
+  final AuthService _authService = AuthService();
+  Future<void> _checkCompletionStatusAndNavigate() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isCompleted = prefs.getBool('isCompleted') ?? false;
+    if (isCompleted) {
+      Get.to(() => BirthdayPage(uid: uid, name: name));
+    } else {
+      Get.to(() => BirthdayPage(uid: uid, name: name));
+    }
+  }
+
+
+
+/*  void _sendSignInLinkToEmail(String email) async {
+    await _authService.sendSignInWithEmailLink(email);
+    Get.snackbar(
+      'Email Sent',
+      'A sign-in link has been sent to $email',
+      snackPosition: SnackPosition.BOTTOM,
+    );
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +56,7 @@ class ConnectAccount extends StatelessWidget {
           TextButton(
             onPressed: () {
               // Action when Skip button is pressed
-              Get.back();
+              Get.to(() => BirthdayPage(uid: uid, name: name));
               print("Skip pressed");
             },
             child: Text(
@@ -82,7 +106,13 @@ class ConnectAccount extends StatelessWidget {
               iconAssetPath: 'assets/apple.png',
               buttonText: "Continue with Apple",
               textColor: textInvertColor,
-              destinationWidget: BirthdayPage(uid: uid, name: name), // Pass uid and name
+              //destinationWidget: BirthdayPage(uid: uid, name: name), // Pass uid and name
+              onPressed: () {
+                print('Email (apple) pressed');
+                /*EmailInputDialog.show(context, (email) {
+                  _sendSignInLinkToEmail(email);
+                });*/
+              },
             ),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.02,
@@ -92,7 +122,12 @@ class ConnectAccount extends StatelessWidget {
               iconAssetPath: 'assets/google.png',
               buttonText: "Continue with Google",
               textColor: textBlackColor,
-              destinationWidget: BirthdayPage(uid: uid, name: name), // Pass uid and name
+              //destinationWidget: BirthdayPage(uid: uid, name: name), // Pass uid and name
+              onPressed: () async {
+                print('Google button pressed');
+                await _authService.signInWithGoogle();
+                await _checkCompletionStatusAndNavigate();
+              },
             ),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.02,
@@ -102,7 +137,11 @@ class ConnectAccount extends StatelessWidget {
               iconAssetPath: 'assets/facebook.png',
               buttonText: "Continue with Facebook",
               textColor: textInvertColor,
-              destinationWidget: BirthdayPage(uid: uid, name: name), // Pass uid and name
+              //destinationWidget: BirthdayPage(uid: uid, name: name), // Pass uid and name
+              onPressed: () {
+                print('Google button pressed');
+                _authService.signInWithGoogle();
+              },
             ),
           ],
         ),
