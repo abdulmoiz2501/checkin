@@ -1,3 +1,4 @@
+import 'package:checkin/View/Login.dart';
 import 'package:checkin/View/walkThrough2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -20,7 +21,7 @@ class WalkThrough1 extends StatelessWidget {
           TextButton(
             onPressed: () {
               // Action when Skip button is pressed
-              Get.back();
+              Get.to(() => Login());
               print("Skip pressed");
             },
             child: Text(

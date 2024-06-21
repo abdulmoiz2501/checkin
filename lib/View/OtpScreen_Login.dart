@@ -1,6 +1,7 @@
 import 'package:checkin/View/HomeScreen.dart';
 import 'package:checkin/View/NameScreen.dart';
 import 'package:checkin/View/rules_screen.dart';
+import 'package:checkin/widgets/floating_actionbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/colors.dart';
+import '../controllers/user_auth_controller.dart';
 import '../services/auth_service.dart';
 import '../utils/theme/custom_themes/text_theme.dart';
 
@@ -52,7 +54,7 @@ class _OtpScreenLoginState extends State<OtpScreenLogin> {
     }
   }
 
-  void _verifyOtp(String otp) async {
+  Future<void> _verifyOtp(String otp) async {
     try {
       User? user = await _authService.confirmVerificationCode(widget.verificationId, otp);
       if (user != null) {
@@ -80,6 +82,8 @@ class _OtpScreenLoginState extends State<OtpScreenLogin> {
     }
   }
 
+
+
   @override
   void dispose() {
     // Dispose the controllers and focus nodes
@@ -94,6 +98,7 @@ class _OtpScreenLoginState extends State<OtpScreenLogin> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(UserAuthController());
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -257,9 +262,25 @@ class _OtpScreenLoginState extends State<OtpScreenLogin> {
                 ),
               ),
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   String otp = controllers.map((controller) => controller.text).join('');
-                  _verifyOtp(otp);
+                  await _verifyOtp(otp);
+                  User? user = FirebaseAuth.instance.currentUser;
+                  String? uid = user?.uid;
+                  print('uid: $uid');
+                  try {
+                    if (uid != null) {
+                     bool resp = await controller.signInUser(uid);
+                     if(resp == true){
+                       await _checkCompletionStatusAndNavigate();
+                     }else{
+                       showCustomSnackbar(context, Colors.red, "Failed to sign in");
+                     }
+                    }
+                  } catch (e) {
+                    print('Failed to sign in: $e');
+                  }
+
                   print("Next pressed");
                 },
                 style: ElevatedButton.styleFrom(
