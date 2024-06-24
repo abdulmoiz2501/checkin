@@ -4,6 +4,7 @@ import 'package:get/get_core/src/get_main.dart';
 
 import '../constants/colors.dart';
 import '../widgets/selectable_button.dart';
+import 'CheckInScreen.dart';
 
 class SelectInterestScreen extends StatefulWidget {
   const SelectInterestScreen({super.key});
@@ -14,6 +15,18 @@ class SelectInterestScreen extends StatefulWidget {
 
 class _SelectInterestScreenState extends State<SelectInterestScreen> {
   String selectedOption = '';
+
+  void showSnackbar(String message) {
+    Get.snackbar(
+      'Select Interest',
+      message,
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.red,
+      colorText: Colors.white,
+      margin: EdgeInsets.only(bottom: 20),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -128,9 +141,12 @@ class _SelectInterestScreenState extends State<SelectInterestScreen> {
               ),
               child: ElevatedButton(
                 onPressed: () {
-
-                  // Get.to(() => SexualityScreen());
-                  print("Next pressed");
+                  if (selectedOption.isEmpty) {
+                    showSnackbar('Please select at least one interest.');
+                  } else {
+                    Get.to(() => CheckinScreen());
+                    print("Next pressed");
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,

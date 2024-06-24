@@ -7,31 +7,21 @@ class AuthService {
 
   Future<User?> signInWithGoogle() async {
     try {
-      // Trigger the Google Authentication flow
-      final GoogleSignInAccount? googleSignInAccount =
-      await _googleSignIn.signIn();
+      final GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
 
       if (googleSignInAccount != null) {
-        // Obtain the auth details from the request
-        final GoogleSignInAuthentication googleAuth =
-        await googleSignInAccount.authentication;
+        final GoogleSignInAuthentication googleAuth = await googleSignInAccount.authentication;
 
-        // Create a new credential
         final OAuthCredential credential = GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,
         );
 
-        // Check if the user is already signed in with a phone number
         if (_auth.currentUser != null) {
-          // Link the Google credential with the current user
-          UserCredential userCredential =
-          await _auth.currentUser!.linkWithCredential(credential);
+          UserCredential userCredential = await _auth.currentUser!.linkWithCredential(credential);
           return userCredential.user;
         } else {
-          // If not signed in, sign in with the Google credential
-          UserCredential userCredential =
-          await _auth.signInWithCredential(credential);
+          UserCredential userCredential = await _auth.signInWithCredential(credential);
           return userCredential.user;
         }
       } else {
@@ -40,9 +30,11 @@ class AuthService {
       }
     } catch (e) {
       print('Google Sign-In error: $e');
-      return null;
+      rethrow;  // Rethrow the exception so it can be caught in the onPressed method
     }
   }
+
+
   /*Future<void> sendSignInWithEmailLink(String email) async {
     try {
       var actionCodeSettings = ActionCodeSettings(
@@ -114,6 +106,7 @@ class AuthService {
     return userCredential.user;
   }
 
+
   // Check if User Exists
   Future<bool> userExists(String phoneNumber) async {
     try {
@@ -123,5 +116,9 @@ class AuthService {
     } catch (e) {
       return false; // if no user
     }
+  }
+
+  Future<List<String>> fetchSignInMethodsForEmail(String email) async {
+    return await _auth.fetchSignInMethodsForEmail(email);
   }
 }

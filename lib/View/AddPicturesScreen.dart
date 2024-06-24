@@ -29,6 +29,7 @@ class AddPicturesScreen extends StatefulWidget {
 class _AddPicturesScreenState extends State<AddPicturesScreen> {
   final ImagePicker _picker = ImagePicker();
   List<File?> _images = List<File?>.filled(4, null);
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
   Future<void> _pickImage(int index) async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -128,21 +129,32 @@ class _AddPicturesScreenState extends State<AddPicturesScreen> {
               child: ElevatedButton(
                 onPressed: () {
                   List<String> imagePaths = _getImagePaths();
-                  Get.to(() => AddNoteScreen(
-                        uid: widget.uid,
-                        name: widget.name,
-                        age: widget.age,
-                        gender: widget.gender,
-                        sexuality: widget.sexuality,
-                        imagePaths: imagePaths,
-                      ));
-                  print("Next pressed");
-                  print('User ID: ${widget.uid}');
-                  print('Name: ${widget.name}');
-                  print('Age: ${widget.age}');
-                  print('gender: ${widget.gender}');
-                  print('sexuality: ${widget.sexuality}');
-                  print('Image paths: $imagePaths');
+                  if(imagePaths.isEmpty){
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Please select atleast one image.'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  }
+                  else{
+                    Get.to(() => AddNoteScreen(
+                      uid: widget.uid,
+                      name: widget.name,
+                      age: widget.age,
+                      gender: widget.gender,
+                      sexuality: widget.sexuality,
+                      imagePaths: imagePaths,
+                    ));
+                    print("Next pressed");
+                    print('User ID: ${widget.uid}');
+                    print('Name: ${widget.name}');
+                    print('Age: ${widget.age}');
+                    print('gender: ${widget.gender}');
+                    print('sexuality: ${widget.sexuality}');
+                    print('Image paths: $imagePaths');
+                  }
+
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,

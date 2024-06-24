@@ -24,7 +24,7 @@ class Login extends StatelessWidget {
               Container(
                 child: Image.asset(
                   'assets/logo_login.png',
-                  width: ScreenUtil.responsiveWidth(0.7), // 70%
+                  width: ScreenUtil.responsiveWidth(0.5), // 50%
                   height: ScreenUtil.responsiveHeight(0.23),
                 ),
               ),

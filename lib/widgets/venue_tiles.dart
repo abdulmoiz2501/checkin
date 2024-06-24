@@ -1,3 +1,4 @@
+import 'package:checkin/View/VenueSelectedScreen.dart';
 import 'package:checkin/constants/colors.dart';
 import 'package:checkin/widgets/venue_button.dart';
 import 'package:flutter/cupertino.dart';
@@ -53,6 +54,7 @@ class VenueTile extends StatelessWidget {
                         style: TextStyle(
                           color: Colors.grey,
                           fontSize: 12,
+                          fontFamily: 'SFProDisplay',
                         ),
                       ),
                       SizedBox(height: 5),
@@ -60,7 +62,7 @@ class VenueTile extends StatelessWidget {
                         children: [
                           Text(
                             openingTime,
-                            style: TextStyle(color: Colors.green),
+                            style: TextStyle(color: Colors.green, fontFamily: 'SFProDisplay'),
                           ),
                           SizedBox(width: 5),
                           Text('·'),
@@ -75,7 +77,7 @@ class VenueTile extends StatelessWidget {
                         leftGradient: gradientLeft,
                         rightGradient: gradientRight,
                         onPressed: () {
-                          Get.to(() => SelectInterestScreen());
+                          Get.to(() => VenueSelectedScreen());
                           //print('Show on map pressed');
                         },
                       ),

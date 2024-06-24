@@ -19,22 +19,23 @@ class SexualityScreen extends StatefulWidget {
 
 class _SexualityScreenState extends State<SexualityScreen> {
   String selectedOption = '';
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldMessengerKey,
       appBar: AppBar(
         leading: IconButton(
           icon: SizedBox(
-            width: 20, // Specify the desired width
-            height: 20, // Specify the desired height
-            child: Image.asset('assets/back_arrow.png'), // Load your SVG image
+            width: 20, //
+            height: 20,
+            child: Image.asset('assets/back_arrow.png'),
           ),
-          // Load your SVG image
+
           onPressed: () {
             Get.back();
-            // Action when the leading icon is pressed
             print("Leading icon pressed");
           },
         ),
@@ -104,20 +105,29 @@ class _SexualityScreenState extends State<SexualityScreen> {
               ),
               child: ElevatedButton(
                 onPressed: () {
-
-                  Get.to(() => AddPicturesScreen(
-                    uid: widget.uid,
-                    name: widget.name,
-                    age: widget.age,
-                    gender: widget.gender,
-                    sexuality: selectedOption,
-                  ));
-                  print("Next pressed");
-                  print('User ID: ${widget.uid}');
-                  print('Name: ${widget.name}');
-                  print('Age: ${widget.age}');
-                  print('gender: ${widget.gender}');
-                  print('sexuality: $selectedOption');
+                  if(selectedOption.isEmpty){
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Please select your sexuality.'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  }
+                  else{
+                    Get.to(() => AddPicturesScreen(
+                      uid: widget.uid,
+                      name: widget.name,
+                      age: widget.age,
+                      gender: widget.gender,
+                      sexuality: selectedOption,
+                    ));
+                    print("Next pressed");
+                    print('User ID: ${widget.uid}');
+                    print('Name: ${widget.name}');
+                    print('Age: ${widget.age}');
+                    print('gender: ${widget.gender}');
+                    print('sexuality: $selectedOption');
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,

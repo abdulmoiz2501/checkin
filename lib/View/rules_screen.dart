@@ -21,7 +21,7 @@ class RulesScreen extends StatelessWidget {
             child: Image.asset('assets/back_arrow.png'), // Load your SVG image
           ),
           onPressed: () {
-            Get.back();
+            //Get.back();
             print("Leading icon pressed");
           },
         ),

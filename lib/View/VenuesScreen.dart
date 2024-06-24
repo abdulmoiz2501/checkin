@@ -56,7 +56,7 @@ class _VenueScreenState extends State<VenueScreen> {
 
       body: Padding(
         padding: EdgeInsets.symmetric(
-            horizontal: MediaQuery.of(context).size.width * 0.053),
+            horizontal: MediaQuery.of(context).size.width * 0.023),
         child: Column(
           children: [
             SizedBox(height:15),

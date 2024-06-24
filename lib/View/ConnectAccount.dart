@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -15,6 +16,7 @@ class ConnectAccount extends StatelessWidget {
 
    ConnectAccount({super.key, required this.uid, required this.name});
   final AuthService _authService = AuthService();
+
   Future<void> _checkCompletionStatusAndNavigate() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isCompleted = prefs.getBool('isCompleted') ?? false;
@@ -26,6 +28,15 @@ class ConnectAccount extends StatelessWidget {
   }
 
 
+  void _showSnackBar(BuildContext context, Color backgroundColor, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: backgroundColor,
+        content: Text(message),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
 
 /*  void _sendSignInLinkToEmail(String email) async {
     await _authService.sendSignInWithEmailLink(email);
@@ -101,6 +112,7 @@ class ConnectAccount extends StatelessWidget {
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.05,
             ),
+
             customButton(
               backgroundColor: Color(0xFF21262D),
               iconAssetPath: 'assets/apple.png',
@@ -114,9 +126,11 @@ class ConnectAccount extends StatelessWidget {
                 });*/
               },
             ),
+
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.02,
             ),
+
             customButton(
               backgroundColor: Color(0xFFF4F6F7),
               iconAssetPath: 'assets/google.png',
@@ -124,14 +138,37 @@ class ConnectAccount extends StatelessWidget {
               textColor: textBlackColor,
               //destinationWidget: BirthdayPage(uid: uid, name: name), // Pass uid and name
               onPressed: () async {
-                print('Google button pressed');
-                await _authService.signInWithGoogle();
-                await _checkCompletionStatusAndNavigate();
+                try {
+                  print('Google button pressed');
+                  User? user = await _authService.signInWithGoogle();
+                  if (user != null) {
+                    _showSnackBar(context, Colors.red, 'The account connected successfully.');
+                    await _checkCompletionStatusAndNavigate();
+                  } else {
+
+                    print('Google sign-in canceled');
+                  }
+                } catch (e) {
+                  print('Google sign-in error: $e');
+                  if (e is FirebaseAuthException) {
+                    if (e.code == 'credential-already-in-use') {
+                      _showSnackBar(context, Colors.red, 'This Google account is already associated with a different user account.');
+                    } else if (e.code == 'provider-already-linked') {
+                      _showSnackBar(context, Colors.red, 'User has already been linked to the given provider.');
+                    } else {
+                      _showSnackBar(context, Colors.red, 'An error occurred. Please try again.');
+                    }
+                  } else {
+                    _showSnackBar(context, Colors.red, 'An unexpected error occurred. Please try again.');
+                  }
+                }
               },
+
             ),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.02,
             ),
+
             customButton(
               backgroundColor: Color(0xFF0078FF),
               iconAssetPath: 'assets/facebook.png',
@@ -139,8 +176,8 @@ class ConnectAccount extends StatelessWidget {
               textColor: textInvertColor,
               //destinationWidget: BirthdayPage(uid: uid, name: name), // Pass uid and name
               onPressed: () {
-                print('Google button pressed');
-                _authService.signInWithGoogle();
+               /* print('Google button pressed');
+                _authService.signInWithGoogle();*/
               },
             ),
           ],

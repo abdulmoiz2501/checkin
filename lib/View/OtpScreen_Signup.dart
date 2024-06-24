@@ -1,4 +1,5 @@
 import 'package:checkin/View/rules_screen.dart';
+import 'package:checkin/controllers/user_auth_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,8 @@ class OtpScreenSignUp extends StatefulWidget {
 }
 
 class _OtpScreenSignUpState extends State<OtpScreenSignUp> {
+
+  final UserAuthController controller = Get.isRegistered<UserAuthController> ()? Get.find<UserAuthController>() : Get.put(UserAuthController());
   final focusNodes = List<FocusNode>.generate(6, (index) => FocusNode());
   final controllers = List<TextEditingController>.generate(6, (index) => TextEditingController());
   bool isRed = false;
@@ -48,6 +51,9 @@ class _OtpScreenSignUpState extends State<OtpScreenSignUp> {
     try {
       User? user = await _authService.confirmVerificationCode(widget.verificationId, otp);
       if (user != null) {
+        controller.phoneNumber.value = widget.phoneNumber;
+        print('User signed in: ${user.uid}');
+        print('Phone: ${controller.phoneNumber.value}');
         Get.to(() => NameScreen());
       } else {
         setState(() {
@@ -75,6 +81,7 @@ class _OtpScreenSignUpState extends State<OtpScreenSignUp> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -129,39 +136,49 @@ class _OtpScreenSignUpState extends State<OtpScreenSignUp> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Form(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: List.generate(6, (index) {
-                        return Container(
-                          width: 60,
+                  Row(
+                    children: List.generate(6, (index) {
+                      return Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
                           child: TextFormField(
-                            controller: controllers[index],
-                            focusNode: focusNodes[index],
-                            onChanged: (value) => nextField(value, index),
-                            style: TextStyle(
-                              fontSize: 24,
-                              color: isRed ? Colors.red : Colors.black,
-                            ),
-                            keyboardType: TextInputType.number,
-                            inputFormatters: [LengthLimitingTextInputFormatter(1), FilteringTextInputFormatter.digitsOnly],
-                            textAlign: TextAlign.center,
+                            maxLength: 1,
+                            maxLines: 1,
                             decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Colors.grey.shade200,
+                              hintText: "",
+                              counterText: "",
                               enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: isRed ? Colors.red : Colors.transparent),
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(15.0),
+                                borderSide: BorderSide(
+                                    color: isRed
+                                        ? Colors.red
+                                        : Colors
+                                        .grey.shade400), // Outline color
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: isRed ? Colors.red : Colors.blue),
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(15.0),
+                                borderSide: BorderSide(
+                                    color: isRed
+                                        ? Colors.red
+                                        : Colors
+                                        .black), // Outline color when focused
                               ),
                             ),
+                            textAlign: TextAlign.center,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            style: TextStyle(
+                              color: isRed ? Colors.red : Colors.black,
+                            ),
+                            focusNode: focusNodes[index],
+                            controller: controllers[index],
+                            onChanged: (value) => nextField(value, index),
                           ),
-                        );
-                      }),
-                    ),
+                        ),
+                      );
+                    }),
                   ),
                   const SizedBox(height: 16),
                   if (isRed)
@@ -187,7 +204,7 @@ class _OtpScreenSignUpState extends State<OtpScreenSignUp> {
                       ),
                       TextButton(
                         onPressed: () {
-                          // Resend code functionality
+
                         },
                         child: const Text(
                           'Resend',
@@ -196,6 +213,7 @@ class _OtpScreenSignUpState extends State<OtpScreenSignUp> {
                             fontFamily: 'SFProDisplay',
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
+                            decoration: TextDecoration.underline,
                           ),
                         ),
                       ),

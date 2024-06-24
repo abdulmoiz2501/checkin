@@ -2,6 +2,8 @@ import 'package:checkin/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'SelectInterestScreen.dart';
+
 class VenueSelectedScreen extends StatelessWidget {
   const VenueSelectedScreen({Key? key}) : super(key: key);
 
@@ -13,21 +15,29 @@ class VenueSelectedScreen extends StatelessWidget {
           // Map background
           Positioned.fill(
             child: Image.asset(
-              'assets/venue_selected.png', // Replace with your map background asset
+              'assets/venue_selected.png', // Replace with your map appi implementat
               fit: BoxFit.cover,
             ),
           ),
-          // AppBar with back button
           Positioned(
-            top: MediaQuery.of(context).padding.top,
+            top: MediaQuery.of(context).padding.top + 8,
             left: 16,
-            child: IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.black),
-              onPressed: () {
-                Get.back();
-              },
+            child: Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Color(0xFF21262D),
+              ),
+              child: IconButton(
+                icon: Icon(Icons.arrow_back, color: Colors.white),
+                onPressed: () {
+                  Get.back();
+                },
+              ),
             ),
           ),
+
           // Foreground content
           Positioned(
             bottom: 0,
@@ -67,53 +77,74 @@ class VenueSelectedScreen extends StatelessWidget {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            // Handle check-in action
+                            Get.to(() => SelectInterestScreen());
                           },
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(
+                                  30), // Increase border radius for more rounded corners
                             ),
+                            backgroundColor: Colors.transparent,
+                            padding: EdgeInsets.zero,
+                            shadowColor: Colors.transparent,
                           ),
-                          child: Container(
+                          child: Ink(
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: [gradientLeft, gradientRight],
                               ),
-                              borderRadius: BorderRadius.circular(10), // Optional: Add border radius if desired
+                              borderRadius: BorderRadius.circular(
+                                  30), // Match border radius with button
                             ),
-                            padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0), // Optional: Add padding
-                            child: Row(
-                              children: [
-                                Text(
-                                  "Checkin",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontFamily: 'SFProDisplay',
-                                    color: Colors.white,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 24.0,
+                                  vertical:
+                                      12.0), // Adjust padding for bigger button
+                              constraints: BoxConstraints(
+                                  minWidth: 100.0,
+                                  minHeight:
+                                      48.0), // Adjust constraints for bigger button
+                              alignment:
+                                  Alignment.center, // Center align the content
+                              child: Row(
+                                mainAxisSize: MainAxisSize
+                                    .min, // Adjust size based on content
+                                children: [
+                                  Text(
+                                    "Checkin",
+                                    style: TextStyle(
+                                      fontSize:
+                                          14, // Adjust font size if needed
+                                      fontFamily: 'SFProDisplay',
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(width: 8), // Adjust the spacing as needed
-                                Image.asset(
-                                  'assets/home_unselected.png', // Replace with your logo asset path
-                                  width: 24, // Adjust the width as needed
-                                  height: 24, // Adjust the height as needed
-                                ),
-                              ],
+                                  SizedBox(
+                                      width: 8), // Adjust the spacing as needed
+                                  Image.asset(
+                                    'assets/checkin_icon.png',
+                                    width: 24,
+                                    height: 24,
+                                  ),
+                                ],
+                              ),
                             ),
-                          )
-
+                          ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 8),
+                    SizedBox(height: 4),
                     Row(
                       children: [
-                        SizedBox(width: 4),
-                        Text("Pub · 12 Riley St, Surry Hills",
+                        SizedBox(width: 2),
+                        Text(
+                          "Pub · 12 Riley St, Surry Hills",
                           style: TextStyle(
                             fontSize: 16,
                             fontFamily: 'SFProDisplay',
-                            color: Colors.grey,
+                            color: Color(0xFF7A7D81),
                           ),
                         ),
                       ],
@@ -121,8 +152,13 @@ class VenueSelectedScreen extends StatelessWidget {
                     SizedBox(height: 8),
                     Row(
                       children: [
-                        Text("Open", style: TextStyle(color: Colors.green)),
-                        Text(" · Closes 1 am"),
+                        Text("Open",
+                            style: TextStyle(
+                                color: Colors.green,
+                                fontFamily: 'SFProDisplay',
+                                fontWeight: FontWeight.bold)),
+                        Text(" · Closes 1 am",
+                            style: TextStyle(fontFamily: 'SFProDisplay')),
                       ],
                     ),
                     SizedBox(height: 16),
@@ -135,19 +171,52 @@ class VenueSelectedScreen extends StatelessWidget {
                           ),
                           decoration: BoxDecoration(
                             color: Colors.red,
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(
                             "LIVE",
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'SFProDisplay',
+                            ),
                           ),
                         ),
                         SizedBox(width: 8),
-                        Text("30 people currently checked in"),
+                        RichText(
+                          text: TextSpan(
+                            style: TextStyle(
+                              fontFamily: 'SFProDisplay',
+                              color: Color(0xFF7A7D81),
+                            ),
+                            children: [
+                              TextSpan(
+                                text: '30 people',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              TextSpan(
+                                text: ' currently checked in  ',
+                              ),
+
+                              WidgetSpan(child: ImageIcon(
+                                AssetImage('assets/home_selected.png'),
+                                size: 18,
+                                color: gradientRight,
+                              ),
+                              ),
+                            ],
+                          ),
+                        ),
+
                       ],
                     ),
                     SizedBox(height: 16),
-                    Text("What are people looking for here?"),
+                    Text(
+                      "What are people looking for here?",
+                      style: TextStyle(fontFamily: 'SFProDisplay'),
+                    ),
                     SizedBox(height: 8),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -159,18 +228,49 @@ class VenueSelectedScreen extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 16),
-                    Text("Forrester's"),
+                    Text("Forrester's",
+                        style: TextStyle(
+                            fontFamily: 'SFProDisplay',
+                            fontWeight: FontWeight.bold)),
                     SizedBox(height: 8),
+                    /*Row(
+                      children: [
+                        //Image.asset('assets/image1.png'),
+                        _buildImageThumbnail(
+                            'assets/image1.png'),
+                        SizedBox(width: 8),
+                        _buildImageThumbnail(
+                            'assets/image2.png'),
+                        SizedBox(width: 8),
+                        _buildImageThumbnail(
+                            'assets/image3.png'),
+                      ],
+                    ),*/
                     Row(
                       children: [
-                        _buildImageThumbnail(
-                            'assets/image1.png'), // Replace with your assets
+                        // First image taking half of the row
+                        Expanded(
+                          flex: 1,
+                          child: _buildImageThumbnail('assets/image4.png'),
+                        ),
                         SizedBox(width: 8),
-                        _buildImageThumbnail(
-                            'assets/image2.png'), // Replace with your assets
-                        SizedBox(width: 8),
-                        _buildImageThumbnail(
-                            'assets/image3.png'), // Replace with your assets
+                        // Column containing the second and third images
+                        /*Expanded(
+                          flex: 1,
+                          child: Column(
+                            children: [
+                              Expanded(
+                                child:
+                                    _buildImageThumbnail('assets/image2.png'),
+                              ),
+                              SizedBox(height: 8),
+                              Expanded(
+                                child:
+                                    _buildImageThumbnail('assets/image3.png'),
+                              ),
+                            ],
+                          ),
+                        ),*/
                       ],
                     ),
                   ],
@@ -185,28 +285,45 @@ class VenueSelectedScreen extends StatelessWidget {
 
   Widget _buildInterestCount(String label, int count) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          count.toString(),
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ShaderMask(
+          shaderCallback: (bounds) => LinearGradient(
+            colors: [gradientLeft, gradientRight],
+            tileMode: TileMode.mirror,
+          ).createShader(bounds),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'SFProDisplay',
+              color: Colors.white,
+            ),
+          ),
         ),
         SizedBox(height: 4),
-        Text(label),
+        Text(
+          '$count people',
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.normal,
+            fontFamily: 'SFProDisplay',
+            color: Colors.black,
+          ),
+        ),
       ],
     );
   }
 
+
   Widget _buildImageThumbnail(String assetPath) {
-    return Expanded(
-      child: AspectRatio(
-        aspectRatio: 1,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: Image.asset(
-            assetPath,
-            fit: BoxFit.cover,
-          ),
-        ),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8),
+      child: Image.asset(
+        assetPath,
+        fit: BoxFit.cover,
       ),
     );
   }

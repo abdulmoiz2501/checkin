@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
-import '../widgets/floating_actionbar.dart';
+import '../widgets/snackbar.dart';
 import '../widgets/horizontal_view_list.dart';
 import '../widgets/selectable_button.dart';
 import 'VenueSelectedScreen.dart';

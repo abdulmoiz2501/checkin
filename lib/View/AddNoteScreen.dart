@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/colors.dart';
 import '../controllers/user_auth_controller.dart';
 import '../services/user_service.dart';
-import '../widgets/floating_actionbar.dart';
+import '../widgets/snackbar.dart';
 import 'UseLocationScreen.dart';
 
 class AddNoteScreen extends StatefulWidget {
@@ -34,18 +35,24 @@ class AddNoteScreen extends StatefulWidget {
 class _AddNoteScreenState extends State<AddNoteScreen> {
   final TextEditingController _noteController = TextEditingController();
   final UserService _userService = UserService();
+  UserAuthController controller = Get.isRegistered<UserAuthController> ()? Get.find<UserAuthController>() : Get.put(UserAuthController());
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+  bool _isLoading = false;
+  final DatabaseReference dbRef = FirebaseDatabase.instance.ref().child('users');
 
-  /*Future<void> _saveUserDetails(
-      String uid, String name, int age, String gender, String sexuality, String note) async {
-    await _userService.saveUserDetails(
-      uid: uid,
-      name: name,
-      age: age,
-      gender: gender,
-      sexuality: sexuality,
-      note: note,
-    );
-  }*/
+
+  Future<void> _saveUserDetails() async {
+    print('saving details in db');
+    try {
+      await dbRef.child(controller.phoneNumber.value).set({
+        'uid': widget.uid,
+        'isCompleted': true,
+      });
+      print('User details saved successfully');
+    } catch (e) {
+      print('Error saving user details: $e');
+    }
+  }
 
   Future<void> _setCompletionStatus(bool status) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -187,16 +194,12 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
               ),
               child: ElevatedButton(
                 onPressed: () async {
-                  //String note = _noteController.text.trim();
-                  String note = "note";
-                  /*await _saveUserDetails(
-                    widget.uid,
-                    widget.name,
-                    widget.age,
-                    widget.gender,
-                    widget.sexuality,
-                    note,
-                  );*/
+                  String note = _noteController.text.trim();
+                  //String note = "note";
+                  setState(() {
+                    _isLoading = true;
+                  });
+                  await _saveUserDetails();
                   print('note: $note');
                   final resp = await controller.signUpUser({
                     'uid': widget.uid,
@@ -208,9 +211,15 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                   if(resp == true){
                     print("User signed up successfully");
                     await _setCompletionStatus(true);
+                    setState(() {
+                      _isLoading = false;
+                    });
                     Get.to(() => GetLocationScreen());
                   }else{
                     showCustomSnackbar(context, Colors.red, 'Error signing up user');
+                    setState(() {
+                      _isLoading = false;
+                    });
                   }
                   print("Next pressed");
                 },
@@ -221,7 +230,9 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                     borderRadius: BorderRadius.circular(25),
                   ),
                 ),
-                child: Ink(
+                child: _isLoading
+                    ? CircularProgressIndicator(color: textInvertColor)
+                    :Ink(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [gradientLeft, gradientRight],

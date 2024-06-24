@@ -1,10 +1,28 @@
+import 'dart:async';
 import 'package:checkin/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/ScreenUtils.dart';
+import 'walkthrough1.dart'; // Import your WalkThrough1 screen
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
+
+  @override
+  _SplashScreenState createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Set a timer to navigate to WalkThrough1 after 2 seconds
+    Timer(Duration(seconds: 2), () {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => WalkThrough1()), // Replace with your WalkThrough1 screen
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

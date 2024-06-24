@@ -18,6 +18,7 @@ class BirthdayPage extends StatefulWidget {
 
 class _BirthdayPageState extends State<BirthdayPage> {
   TextEditingController _controller = TextEditingController();
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
   Color hintTextColor = Colors.grey;
   int age = 0;
 
@@ -53,14 +54,12 @@ class _BirthdayPageState extends State<BirthdayPage> {
       appBar: AppBar(
         leading: IconButton(
           icon: SizedBox(
-            width: 20, // Specify the desired width
-            height: 20, // Specify the desired height
-            child: Image.asset('assets/back_arrow.png'), // Load your SVG image
+            width: 20,
+            height: 20,
+            child: Image.asset('assets/back_arrow.png'),
           ),
-          // Load your SVG image
           onPressed: () {
             Get.back();
-            // Action when the leading icon is pressed
             print("Leading icon pressed");
           },
         ),
@@ -132,11 +131,21 @@ class _BirthdayPageState extends State<BirthdayPage> {
               ),
               child: ElevatedButton(
                 onPressed: () {
-                  print('User ID: ${widget.uid}');
-                  print('Name: ${widget.name}');
-                  print('Age: $age');
-                  Get.to(() => GenderScreen(uid: widget.uid, name: widget.name, age: age));
-                  print("Next pressed");
+                  if(_controller.text.isEmpty){
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Please select your birth date.'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  }
+                  else{
+                    print('User ID: ${widget.uid}');
+                    print('Name: ${widget.name}');
+                    print('Age: $age');
+                    Get.to(() => GenderScreen(uid: widget.uid, name: widget.name, age: age));
+                    print("Next pressed");
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,

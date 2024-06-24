@@ -15,6 +15,8 @@ class NameScreen extends StatefulWidget {
 
 class _NameScreenState extends State<NameScreen> {
   final TextEditingController _nameController = TextEditingController();
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+
  /* final UserService _userService = UserService();
   Future<void> _saveUserDetails(String uid, String name) async {
     // Dummy data for gender, note, and sexuality
@@ -35,6 +37,7 @@ class _NameScreenState extends State<NameScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldMessengerKey,
       appBar: AppBar(
         leading: IconButton(
           icon: SizedBox(
@@ -134,7 +137,15 @@ class _NameScreenState extends State<NameScreen> {
                     //await _saveUserDetails(uid, name);
                     Get.to(() => ConnectAccount(uid: uid, name: name));
                     print("Next pressed with UID: $uid and Name: $name");
-                  } else {
+                  } else if(name.isEmpty) {
+                    {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Please enter your name.'),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                    }
                     if (uid == null) {
                       print("Error: UID is empty");
                     }

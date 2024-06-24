@@ -1,7 +1,7 @@
 import 'package:checkin/View/HomeScreen.dart';
 import 'package:checkin/View/NameScreen.dart';
 import 'package:checkin/View/rules_screen.dart';
-import 'package:checkin/widgets/floating_actionbar.dart';
+import 'package:checkin/widgets/snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';

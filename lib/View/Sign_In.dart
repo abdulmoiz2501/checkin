@@ -1,6 +1,8 @@
 import 'package:checkin/View/HomeScreen.dart';
 import 'package:checkin/View/OtpScreen_Login.dart';
 import 'package:checkin/View/rules_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -9,28 +11,102 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/colors.dart';
 import '../services/auth_service.dart';
-import '../widgets/email_input_dialog.dart';
 import '../widgets/sign_in_button.dart';
+import '../widgets/snackbar.dart';
 import 'NameScreen.dart';
-import 'OtpScreen_Signup.dart';
 
-class Signin extends StatelessWidget {
-  final TextEditingController _phoneController = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+class Signin extends StatefulWidget {
+
    Signin({super.key});
 
+  @override
+  State<Signin> createState() => _SigninState();
+}
+
+class _SigninState extends State<Signin> {
+  final TextEditingController _phoneController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final AuthService _authService = AuthService();
-  void _onSubmit() {
-    if (_formKey.currentState!.validate()) {
-      String fullPhoneNumber = _phoneController.text.trim();
+  bool _isLoading = false;
+
+  void _validatePhoneNumber(String value) {
+    final phonePattern = r'^\+\d{1,3}\s?\d{3,14}$';
+    final regExp = RegExp(phonePattern);
+
+    if (!regExp.hasMatch(value)) {
+      _showSnackBar(context, Colors.red, 'Wrong input. Format: +xx xxxxxxxxxx');
+    }
+  }
+
+  void _showSnackBar(BuildContext context, Color backgroundColor, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: backgroundColor,
+        content: Text(message),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
+  Future<bool> _checkPhoneNumberInDatabase(String phoneNumber) async {
+    try {
+      DatabaseEvent event = await FirebaseDatabase.instance
+          .ref()
+          .child('users')
+          .child(phoneNumber)
+          .once();
+
+      if (event.snapshot.value != null) {
+        return true; // Phone number exists
+      } else {
+        return false; // Phone number does not exist
+      }
+    } catch (e) {
+      _showSnackBar(context, Colors.red, 'Error checking phone number in database: $e');
+      return false;
+    }
+  }
+
+  Future<void> _onSubmit() async {
+    FocusScope.of(context).unfocus();
+    final phonePattern = r'^\+\d{1,3}\s?\d{3,14}$';
+    final regExp = RegExp(phonePattern);
+    String fullPhoneNumber = _phoneController.text.trim();
+    if (!regExp.hasMatch(fullPhoneNumber)) {
+      _showSnackBar(context, Colors.red, 'Wrong input. Format: +xx xxxxxxxxxx');
+      return;
+    }
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      bool phoneNumberExists = await _checkPhoneNumberInDatabase(fullPhoneNumber);
+      if (!phoneNumberExists) {
+        setState(() {
+          _isLoading = false;
+        });
+        _showSnackBar(context, Colors.red, 'No account exists for this phone number. Please sign up.');
+        return;
+      }
+
       _authService.signUpWithPhoneNumber(fullPhoneNumber, (verificationId) {
+        setState(() {
+          _isLoading = false;
+        });
         Get.to(() => OtpScreenLogin(
           phoneNumber: fullPhoneNumber,
           verificationId: verificationId,
         ));
       });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      _showSnackBar(context, Colors.red, 'An error occurred. Please try again.');
     }
   }
+
   Future<void> _checkCompletionStatusAndNavigate() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isCompleted = prefs.getBool('isCompleted') ?? false;
@@ -50,7 +126,6 @@ class Signin extends StatelessWidget {
     );
   }*/
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,8 +133,8 @@ class Signin extends StatelessWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: SizedBox(
-            width: 20, // Specify the desired width
-            height: 20, // Specify the desired height
+            width: 20,
+            height: 20,
             child: Image.asset('assets/back_arrow.png'), // Load your SVG image
           ),
           // Load your SVG image
@@ -116,6 +191,9 @@ class Signin extends StatelessWidget {
                   child: TextFormField(
                     controller: _phoneController,
                     keyboardType: TextInputType.phone,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9+\s]')),
+                    ],
                     decoration: InputDecoration(
                       hintText:
                           'Enter your phone number', // Lighter grey hint text
@@ -125,14 +203,17 @@ class Signin extends StatelessWidget {
                       border:
                           InputBorder.none, // Remove the default underline border
                     ),
-                    validator: (value) {
+                      /*onChanged: (value) {
+                        _validatePhoneNumber(value);
+                      },*/
+                    /*validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your phone number';
                       } else if (value.length < 12) {
                         return 'Phone number must be greater than 11 digits including country code. ';
                       }
                       return null;
-                    },
+                    }*/
                   ),
                 ),
               ),
@@ -164,7 +245,10 @@ class Signin extends StatelessWidget {
                       borderRadius: BorderRadius.circular(25),
                     ),
                   ),
-                  child: Ink(
+                  child: _isLoading ?
+                      CircularProgressIndicator(color: textInvertColor,)
+                  :
+                  Ink(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [gradientLeft, gradientRight],
@@ -245,9 +329,39 @@ class Signin extends StatelessWidget {
                 buttonText: "Continue with Google",
                 textColor: textBlackColor,
                 onPressed: () async {
-                  print('Google button pressed');
-                  await _authService.signInWithGoogle();
-                  await _checkCompletionStatusAndNavigate();
+                  try{
+                    print('Google button pressed');
+                    User? user = await _authService.signInWithGoogle();
+                    if (user != null) {
+                      _showSnackBar(context, Colors.green, 'Successfully signed in with Google.');
+                      await _checkCompletionStatusAndNavigate();
+                    } else {
+                      print('Google sign-in canceled');
+                      _showSnackBar(context, Colors.red, 'Google sign-in canceled.');
+                    }
+                  }catch (e){
+                    print('Google sign-in error: $e');
+                    if (e is FirebaseAuthException) {
+                      if (e.code == 'provider-already-linked') {
+                        // Handle the case when the provider is already linked
+                        _showSnackBar(context, Colors.red, 'This Google account is already linked.');
+                      } else if (e.code == 'account-exists-with-different-credential') {
+                        _showSnackBar(context, Colors.red, 'This account exists with a different credential.');
+                      } else {
+                        _showSnackBar(context, Colors.red, 'Authentication error: ${e.message}');
+                      }
+                    } else {
+                      _showSnackBar(context, Colors.red, 'An unexpected error occurred. Please try again.');
+                    }
+                  }
+                  /*User? user = await _authService.signInWithGoogle();
+                  if (user != null) {
+                    await _checkCompletionStatusAndNavigate();
+                  } else {
+                    print('Google sign-in canceled');
+
+
+                  }*/
                 },  // Specify the text color
               ),
               SizedBox(
@@ -259,8 +373,10 @@ class Signin extends StatelessWidget {
                 buttonText: "Continue with Facebook",
                 textColor: textInvertColor,
                 onPressed: () async{
-                print('Google button pressed');
-                await _authService.signInWithGoogle();
+
+                  ///FB
+                /*print('Google button pressed');
+                await _authService.signInWithGoogle()*/;
               },  // Specify the text color
               ),
             ],
