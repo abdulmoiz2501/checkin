@@ -1,20 +1,21 @@
 class ViewProfileModel {
   final bool status;
   final String message;
-  final User user;
+  final UserM user;
 
-  ViewProfileModel({required this.status, required this.message, required this.user});
+  ViewProfileModel(
+      {required this.status, required this.message, required this.user});
 
   factory ViewProfileModel.fromJson(Map<String, dynamic> json) {
     return ViewProfileModel(
       status: json['status'],
       message: json['message'],
-      user: User.fromJson(json['user']),
+      user: UserM.fromJson(json['user']),
     );
   }
 }
 
-class User {
+class UserM {
   final int id;
   final String uid;
   final String name;
@@ -26,12 +27,12 @@ class User {
   final int packageId;
   final String date;
   final String email;
-  final int height;
+  final double? height;
   final int age;
   final bool subscribed;
   final List<UserPicture> userPictures;
 
-  User({
+  UserM({
     required this.id,
     required this.uid,
     required this.name,
@@ -49,13 +50,29 @@ class User {
     required this.userPictures,
   });
 
-  factory User.fromJson(Map<String, dynamic> json) {
+  factory UserM.fromJson(Map<String, dynamic> json) {
     var list = json['UserPictures'] as List;
     print("????????????????");
     print(json);
-    List<UserPicture> userPictureList = list.map((i) => UserPicture.fromJson(i)).toList();
+    double? h = json['height'] !=null ?double.parse(json['height'].toString()) : null;
+    List<UserPicture> userPictureList =
+    list.map((i) => UserPicture.fromJson(i)).toList();
+    print('id: ${json['id'].runtimeType}');
+    print('uid: ${json['UId'].runtimeType}');
+    print('name: ${json['name'].runtimeType}');
+    print('number: ${json['number'].runtimeType}');
+    print('description: ${json['description'].runtimeType}');
+    print('gender: ${json['gender'].runtimeType}');
+    print('sex: ${json['sex'].runtimeType}');
+    print('activeStatus: ${json['activeStatus'].runtimeType}');
+    print('packageId: ${json['packageId'].runtimeType}');
+    print('date: ${json['date'].runtimeType}');
+    print('email: ${json['email'].runtimeType}');
+    print('height: ${json['height'].runtimeType}');
+    print('age: ${json['age'].runtimeType}');
+    print('subscribed: ${json['subscribed'].runtimeType}');
 
-    return User(
+    return UserM(
       id: json['id'],
       uid: json['UId'],
       name: json['name'],
@@ -67,7 +84,7 @@ class User {
       packageId: json['packageId'],
       date: json['date'],
       email: json['email'],
-      height: json['height'],
+      height: h,
       age: json['age'],
       subscribed: json['subscribed'],
       userPictures: userPictureList,
@@ -92,11 +109,11 @@ class UserPicture {
 
   factory UserPicture.fromJson(Map<String, dynamic> json) {
     return UserPicture(
-      id: json['id'],
-      userId: json['userId'],
-      imageUrl: json['imageUrl'],
-      createdAt: json['createdAt'],
-      updatedAt: json['updatedAt'],
-    );
-  }
+        id: json['id'],
+        userId: json['userId'],
+        imageUrl: json['imageUrl'],
+        createdAt: json['createdAt'],
+        updatedAt: json['updatedAt'],
+        );
+    }
 }

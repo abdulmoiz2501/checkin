@@ -27,7 +27,7 @@ class _SelectableButtonGroupState extends State<SelectableButtonGroup> {
   @override
   Widget build(BuildContext context) {
     return Wrap(
-      alignment: WrapAlignment.center,
+      alignment: WrapAlignment.start,
       spacing: 5.0,
       runSpacing: 2.0,
       children: widget.options.map((option) {

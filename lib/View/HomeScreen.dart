@@ -11,6 +11,7 @@ import '../widgets/snackbar.dart';
 import '../widgets/horizontal_view_list.dart';
 import '../widgets/selectable_button.dart';
 import 'SafetyCenterScreen.dart';
+import 'SettingsScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -55,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             icon: Image.asset('assets/setting_icon.png'),
             onPressed: () {
-              // Handle settings button press
+              Get.to(()=> AccountSettingsScreen());
             },
           ),
         ],

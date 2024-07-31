@@ -1,4 +1,3 @@
-// models/edit_profile_model.dart
 
 import 'dart:io';
 
@@ -7,7 +6,7 @@ class EditProfileModel {
   final String sex;
   final double height;
   final String description;
-  final List<File?> images;
+  final List<String> images;
 
   EditProfileModel({
     required this.gender,
@@ -19,10 +18,10 @@ class EditProfileModel {
 
   Map<String, String> toJson() {
     return {
-      'gender': gender,
-      'sex': sex,
-      'height': height.toString(),
-      'description': description,
+    'gender': gender,
+    'sex': sex,
+    'height': height.toString(),
+    'description': description,
     };
-  }
+    }
 }

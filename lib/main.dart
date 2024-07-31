@@ -29,7 +29,6 @@ void main() async {
   await _initializeFirebase();
   Get.put(UserController());
   await PushNotifications.init();
-
   await PushNotifications.localNotiInit();
 
   FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundMessage);

@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
+import '../utils/device/device.dart';
+
 class SubscriptionCard extends StatelessWidget {
   final String title;
   final String description;
@@ -32,7 +34,7 @@ class SubscriptionCard extends StatelessWidget {
           border: Border.all(color: outlineColor)// More curved edges
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(15.0),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,7 +45,7 @@ class SubscriptionCard extends StatelessWidget {
                 width: 70,
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     title ,
@@ -54,7 +56,8 @@ class SubscriptionCard extends StatelessWidget {
                       color: textColor,
                     ),
                   ),
-                  SizedBox(width: 40),
+                 // SizedBox(width: VoidDeviceUtils.getScreenWidth() *0.12),
+                  Spacer(),
                   Text(
                     '\$$price',
                     style: TextStyle(
@@ -79,7 +82,8 @@ class SubscriptionCard extends StatelessWidget {
                       color: textColor,
                     ),
                   ),
-                  SizedBox(width: MediaQuery.of(context).size.width * 0.4,),
+                  //SizedBox(width: MediaQuery.of(context).size.width * 0.3,),
+                  Spacer(),
                   Column(
                     children: [
                       Text(

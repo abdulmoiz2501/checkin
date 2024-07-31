@@ -1,5 +1,8 @@
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:checkin/controllers/edit_profile_controller.dart';
+import 'package:checkin/models/edit_profile_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
@@ -26,11 +29,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   List<File?> _images = List<File?>.filled(4, null).obs;
 
   RxString selectedGender = 'Male'.obs;
+  //  selectedGender.value = controller.userProfile.value.gender;
 
   RxString selectedOption = ''.obs;
 
   final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
-      GlobalKey<ScaffoldMessengerState>();
+  GlobalKey<ScaffoldMessengerState>();
 
   Future<void> _pickImage(int index) async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -43,6 +47,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController heightController = TextEditingController();
+  final EditProfileController editProfileController =
+  Get.put(EditProfileController());
+
   List<String> _getImagePaths() {
     return _images
         .where((file) => file != null)
@@ -52,6 +61,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    selectedGender.value = controller.userProfile.value!.gender;
+    selectedOption.value = controller.userProfile.value!.sex;
+    descriptionController.text = controller.userProfile.value!.description;
     //print('this is the url of the image ${controller.images.value.first}');
     return Scaffold(
       body: SingleChildScrollView(
@@ -83,7 +95,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             GridView.builder(
               padding: EdgeInsets.zero,
               physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true, // Important for GridView inside SingleChildScrollView
+              shrinkWrap:
+              true, // Important for GridView inside SingleChildScrollView
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 6.0,
@@ -98,7 +111,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       GestureDetector(
                         onTap: () async {
                           await _pickImage(index);
-                          setState(() {}); // Trigger a rebuild to show the selected image
+                          setState(
+                                  () {}); // Trigger a rebuild to show the selected image
                         },
                         child: _images[index] != null
                             ? ClipRRect(
@@ -128,12 +142,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             fit: BoxFit.cover,
                             width: double.infinity,
                             height: double.infinity,
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return Center(child: CustomCircularProgressIndicator()); // Display a loading indicator
+                            loadingBuilder:
+                                (context, child, loadingProgress) {
+                              if (loadingProgress == null)
+                                return child;
+                              return Center(
+                                  child:
+                                  CustomCircularProgressIndicator()); // Display a loading indicator
                             },
-                            errorBuilder: (context, error, stackTrace) {
-                              return Icon(Icons.error); // Display an error icon
+                            errorBuilder:
+                                (context, error, stackTrace) {
+                              return Icon(Icons
+                                  .error); // Display an error icon
                             },
                           ),
                         )
@@ -162,7 +182,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 shape: BoxShape.circle,
                               ),
                               child: Center(
-                                child: Icon(Icons.close, color: Colors.white, size: 16), // White cross icon
+                                child: Icon(Icons.close,
+                                    color: Colors.white,
+                                    size: 16), // White cross icon
                               ),
                             ),
                           ),
@@ -185,7 +207,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 shape: BoxShape.circle,
                               ),
                               child: Center(
-                                child: Icon(Icons.close, color: Colors.white, size: 16), // White cross icon
+                                child: Icon(Icons.close,
+                                    color: Colors.white,
+                                    size: 16), // White cross icon
                               ),
                             ),
                           ),
@@ -195,10 +219,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 });
               },
             ).marginSymmetric(vertical: 10.0),
-
-
-
-
             SizedBox(
               height: 15.0,
             ),
@@ -234,11 +254,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 borderRadius: BorderRadius.circular(6.0),
               ),
               child: TextFormField(
+                controller: descriptionController,
                 maxLines: 3,
                 decoration: InputDecoration(
-
                     hintText:
-                        'Write a sentence about yourself. For example: “Adventure seeker with a passion for exploring new horizons”',
+                    'Write a sentence about yourself. For example: “Adventure seeker with a passion for exploring new horizons”',
                     hintStyle: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
@@ -247,7 +267,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       fontFamily: 'SFProDisplay',
                     ),
                     contentPadding:
-                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0)),
+                    EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0)),
               ),
             ),
             SizedBox(height: 16.0),
@@ -273,32 +293,35 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
             SizedBox(height: 10.0),
-            GenderSelectionTile(
+            Obx(()=>GenderSelectionTile(
               title: 'Male',
               iconPath: 'assets/male.png', // Replace with your actual icon path
               isSelected: selectedGender.value == 'Male',
               onTap: () {
                 selectedGender.value = 'Male';
               },
-            ),
-            GenderSelectionTile(
+            ), ),
+
+            Obx(()=> GenderSelectionTile(
               title: 'Female',
               iconPath:
-                  'assets/female.png', // Replace with your actual icon path
+              'assets/female.png', // Replace with your actual icon path
               isSelected: selectedGender == 'Female',
               onTap: () {
                 selectedGender.value = 'Female';
               },
-            ),
-            GenderSelectionTile(
+            ),),
+
+            Obx(()=> GenderSelectionTile(
               title: 'Non Binary',
               iconPath:
-                  'assets/binary.png', // Replace with your actual icon path
+              'assets/binary.png', // Replace with your actual icon path
               isSelected: selectedGender.value == 'Non Binary',
               onTap: () {
                 selectedGender.value = 'Non Binary';
               },
-            ),
+            ),),
+
             SizedBox(height: 16.0),
             Text(
               'Height (optional)',
@@ -330,6 +353,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 borderRadius: BorderRadius.circular(6.0),
               ),
               child: TextFormField(
+                controller: heightController,
                 maxLines: 1,
                 decoration: InputDecoration(
                     hintText: 'Height in CM',
@@ -341,7 +365,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       fontFamily: 'SFProDisplay',
                     ),
                     contentPadding:
-                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0)),
+                    EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0)),
               ),
             ),
             SizedBox(height: 16.0),
@@ -369,7 +393,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 7.0),
               child: Obx(
-                () => SelectableButtonGroup(
+                    () => SelectableButtonGroup(
                   options: [
                     'Friends',
                     'Networking',
@@ -443,7 +467,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 7.0),
               child: Obx(
-                () => SelectableButtonGroup(
+                    () => SelectableButtonGroup(
                   options: [
                     'Straight',
                     'Gay',
@@ -475,8 +499,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
               ),
               child: ElevatedButton(
-                onPressed: () {
-                 // Get.to(()=> SubscriptionScreen());
+                onPressed: () async {
+                  if (_images.where((image) => image != null).length == 4) {
+                    final EditProfileModel profile = EditProfileModel(
+                      gender: selectedGender.value,
+                      sex: selectedOption.value,
+                      height: double.parse(heightController.text),
+                      description: descriptionController.text.trim(),
+                      images: _getImagePaths(),
+                    );
+                    await editProfileController.updateProfile(
+                        FirebaseAuth.instance.currentUser!.uid, profile);
+                  } else {
+                    // Show a Snackbar message if not all images are selected
+                    Get.snackbar("Error", "Please select 4 images");
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,
@@ -492,14 +529,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                     borderRadius: BorderRadius.circular(25),
                   ),
-                  child: Container(
-                    alignment: Alignment.center,
-                    child: Text(
-                      "Save",
-                      style: TextStyle(
-                        color: textInvertColor,
-                        fontFamily: 'SFProDisplay',
-                        fontWeight: FontWeight.w700,
+                  child: Obx(
+                        () => editProfileController.isLoading.value
+                        ? CustomCircularProgressIndicator()
+                        : Container(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Save",
+                        style: TextStyle(
+                          color: textInvertColor,
+                          fontFamily: 'SFProDisplay',
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ),
@@ -514,33 +555,33 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Widget imagePickerCard(bool isCancel, int index) {
     return Stack(
-      children: [
-        Padding(
-          padding: EdgeInsets.all(6.0),
-          child: Container(
-              decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-                borderRadius: BorderRadius.circular(16.0),
-              ),
-              child: Center(
-                  child: isCancel == false
-                      ? Icon(
-                          Icons.add_circle,
-                          size: 30.0,
-                          color: Colors.black,
-                        )
-                      : null)),
-        ),
-        /*isCancel
+        children: [
+    Padding(
+    padding: EdgeInsets.all(6.0),
+    child: Container(
+    decoration: BoxDecoration(
+    color: Colors.grey.shade200,
+    borderRadius: BorderRadius.circular(16.0),
+    ),
+    child: Center(
+    child: isCancel == false
+    ? Icon(
+    Icons.add_circle,
+    size: 30.0,
+    color: Colors.black,
+    )
+        : null)),
+    ),
+    /*isCancel
             ? Positioned(
                 bottom: MediaQuery.of(Get.context!).size.width * -0.03,
                 right: MediaQuery.of(Get.context!).size.width * -0.03,
 
-                child: *//*Image.asset(
+                child: */ /*Image.asset(
                   'assets/circle-cancel.png',
                   height: 36,
                   width: 36,
-                ),*//*
+                ),/ /
                 IconButton(
                   icon: Icon(Icons.cancel, color: Colors.red,size: 30,),
                   onPressed: () {
@@ -558,7 +599,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ) // Replace with your actual icon path
               )
             : SizedBox()*/
-      ],
+    ],
     );
-  }
+    }
 }

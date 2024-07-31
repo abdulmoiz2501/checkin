@@ -59,6 +59,9 @@ class NotificationSendingService {
       },
       body: jsonEncode(messagePayload),
     );
+    print('/////////////////////////This is the response from the notification sending service/////////////////////////');
+    print('/////////Response status: ${response.statusCode}/////////');
+    print('/////////Response body: ${response.body}/////////');
 
     if (response.statusCode == 200) {
       print('Notification sent successfully');
@@ -76,7 +79,6 @@ class NotificationSendingService {
         'notification': {
           'title': 'New Message',
           'body': 'You have received a new message',
-          'icon': 'launcher_icon',
         },
         'data': {
           'click_action': 'FLUTTER_NOTIFICATION_CLICK',
@@ -98,8 +100,6 @@ class NotificationSendingService {
         'notification': {
           'title': 'Friend Request',
           'body': 'You have received a new connection request',
-          'icon': 'launcher_icon',
-
         },
         'data': {
           'click_action': 'FLUTTER_NOTIFICATION_CLICK',
@@ -121,7 +121,6 @@ class NotificationSendingService {
         'notification': {
           'title': 'Friend Request Accepted',
           'body': 'You have a new connection',
-          'icon': 'launcher_icon',
         },
         'data': {
           'click_action': 'FLUTTER_NOTIFICATION_CLICK',

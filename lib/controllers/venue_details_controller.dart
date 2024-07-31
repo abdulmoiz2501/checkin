@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -6,18 +7,19 @@ class VenueDetailsController extends GetxController {
   var isLoading = true.obs;
   var totalPeopleCheckedIn = 0.obs;
   var interests = <Map<String, dynamic>>[].obs;
+  User? user = FirebaseAuth.instance.currentUser;
 
   Future<void> fetchVenueDetails(String placeId) async {
     isLoading(true);
     try {
-      final url = Uri.parse('https://check-in-apis-e4xj.vercel.app/api/v1/venues/getVenues?placeid=$placeId');
+      final url = Uri.parse('https://check-in-apis-e4xj.vercel.app/api/v1/venues/getVenues?placeid=$placeId&userId=${user!.uid}');
       print('Request URL: $url');
       final response = await http.get(url);
 
       print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
+      print('THE RESPONSE OF VENUE DETAILS CONTROLLER Response body: ${response.body}');
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         final data = json.decode(response.body);
         if (data['status'] == false) {
           totalPeopleCheckedIn.value = 0;
@@ -31,6 +33,7 @@ class VenueDetailsController extends GetxController {
             {'label': 'Drinks', 'count': 0},
           ]);
         } else {
+
           totalPeopleCheckedIn.value = data['venues'][0]['totalCheckIns'];
 
           interests.assignAll([

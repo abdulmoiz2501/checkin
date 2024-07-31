@@ -141,6 +141,8 @@ class ConnectAccount extends StatelessWidget {
                 try {
                   print('Google button pressed');
                   User? user = await _authService.signInWithGoogle();
+
+                  ///SnapShot TODO
                   if (user != null) {
                     _showSnackBar(context, Colors.green, 'The account connected successfully.');
                     await _checkCompletionStatusAndNavigate();

@@ -30,7 +30,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
       "title": "WEEKEND",
       "description":
           "The fun starts when Friday finishes. Premium from Friday to Sunday.",
-      "price": "3.99",
+      "price": "5.99",
       "textColor": Colors.white,
       "backgroundColor": Color(0xFF21262D),
       "outlineColor": Colors.black,
@@ -40,7 +40,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
       "title": "1 WEEK",
       "description":
           "See what premiums about and Increase your odds of an interesting connection.",
-      "price": "9.99",
+      "price": "12.99",
       "textColor": gradientLeft,
       "backgroundColor": Color(0xFFFFF9F8),
       "outlineColor": gradientRight,
@@ -50,7 +50,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
       "title": "1 MONTH",
       "description":
           "Connect with new friends and make it a memorable month of meet-ups.",
-      "price": "5.99",
+      "price": "7.99",
       "textColor": gradientLeft,
       "backgroundColor": Color(0xFFFFF9F8),
       "outlineColor": gradientRight,
@@ -60,7 +60,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
       "title": "3 MONTHS",
       "description":
           "Grow your social circle, make memories and stash come cash.",
-      "price": "4.99",
+      "price": "6.99",
       "textColor": gradientLeft,
       "backgroundColor": Color(0xFFFFF9F8),
       "outlineColor": gradientRight,
@@ -419,23 +419,23 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                       switch (_currentIndex) {
                         case 0:
                           voucherId = 3;
-                          amount = 3.99;
+                          amount = 5.99;
                           break;
                         case 1:
                           voucherId = 4;
-                          amount = 9.99;
+                          amount = 12.99;
                           break;
                         case 2:
                           voucherId = 5;
-                          amount = 5.99 * 4; // For 1 month, 5.99 per week
+                          amount = 7.99 * 4; // For 1 month, 5.99 per week
                           break;
                         case 3:
                           voucherId = 6;
-                          amount = 4.99 * 4 * 3; // For 3 months, 4.99 per week
+                          amount = 6.99 * 4 * 3; // For 3 months, 4.99 per week
                           break;
                         default:
                           voucherId = 3;
-                          amount = 3.99;
+                          amount = 5.99;
                       }
 
                       final subscription = SubscriptionModel(

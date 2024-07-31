@@ -15,7 +15,8 @@ class EditProfileController extends GetxController {
 
   Future<void> updateProfile(String userId, EditProfileModel profile) async {
     isLoading.value = true;
-    final url = 'https://check-in-apis-e4xj.vercel.app/api/v1/user/editProfile?userId=$userId';
+    final url =
+        'https://check-in-apis-e4xj.vercel.app/api/v1/user/editProfile?userId=$userId';
 
     var request = http.MultipartRequest('PUT', Uri.parse(url));
     request.fields.addAll(profile.toJson());
@@ -32,11 +33,12 @@ class EditProfileController extends GetxController {
     for (var image in profile.images) {
       if (image != null) {
         request.files.add(await http.MultipartFile.fromPath(
-          'pictures',
-          image.path,
+          'profilePicUrl',
+          image,
         ));
       }
     }
+
     /// Iterate over the images and add them to the request
     /*for (var image in profile.images) {
       if (image != null) {
@@ -58,12 +60,13 @@ class EditProfileController extends GetxController {
       }
     }*/
 
-
     print('Request: ${request.fields}');
     print('Request: ${request.files}');
     try {
       var streamedResponse = await request.send();
       var response = await http.Response.fromStream(streamedResponse);
+      print('Response: ${response.body}');
+      print('Response: ${response.statusCode}');
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         Get.snackbar('Success', 'Profile updated successfully');
@@ -75,5 +78,5 @@ class EditProfileController extends GetxController {
     } finally {
       isLoading.value = false;
     }
-  }
+    }
 }

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
 import '../constants/colors.dart';
 import '../controllers/view_profile_controller.dart';
+import '../widgets/progress_indicator.dart';
 import '../widgets/selectable_button.dart';
 
 class YourProfileScreen extends StatelessWidget {
@@ -24,7 +25,7 @@ class YourProfileScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Obx(() {
         if (controller.isLoading.value) {
-          return Center(child: CircularProgressIndicator());
+          return Center(child: CustomCircularProgressIndicator());
         } else if (controller.userProfile.value == null) {
           return Center(child: Text('Failed to load profile'));
         } else {
@@ -222,8 +223,8 @@ class YourProfileScreen extends StatelessWidget {
                               'Friends',
                               'Networking',
                               'Dates',
-                              'Casual',
                               'Love',
+                              'Casual',
                               'Food',
                               'Explore city',
                               'Parties',
@@ -268,7 +269,8 @@ class YourProfileScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
                               ),
-                              child: Text('Straight'))
+                              child: Text(user.sex),
+                      )
                           .marginSymmetric(vertical: 5.0),
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.03,
