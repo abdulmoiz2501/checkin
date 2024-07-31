@@ -19,7 +19,7 @@ Future _firebaseBackgroundMessage(RemoteMessage message) async {
     print("Some notification Received in background...");
   }
 }
-
+ 
 
 
 
@@ -34,6 +34,7 @@ void main() async {
   FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundMessage);
 
   Stripe.publishableKey = "pk_test_51Pc5xWRunBM6ve3yZWEL79EuXgWoxHiUZ09UzdjnNzir9t6RTAC3S9XLou4xxQ4wOySh0SyQNde0paoC6LWD5DuS00ROhdZRcN";
+  await Stripe.instance.applySettings();
 
   // on background notification tapped
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {

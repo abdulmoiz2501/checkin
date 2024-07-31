@@ -10,15 +10,12 @@ class StripeServices {
   StripeServices._();
   static final StripeServices _instance = StripeServices._();
   static StripeServices get instance => _instance;
+  
   final isDebugMode = true;
   var isLoading = false.obs;
-
-  final _publishableKeyTest = 'pk_test_51Pc5xWRunBM6ve3yZWEL79EuXgWoxHiUZ09UzdjnNzir9t6RTAC3S9XLou4xxQ4wOySh0SyQNde0paoC6LWD5DuS00ROhdZRcN';
-      //'pk_test_51Pfzw1RumBeUNDT0JGEdspy9br3CeTMmxKL7kCJXu5AE77OEZbtRHu0DM1Juk4KU18uejWT0z6j7FJc0LMPzCF3C00Wwpvk1rx';
-      //'pk_live_51Pfzw1RumBeUNDT0vz8WmbhnGAgUoYqNyDSmYzRaS8yC3ghhWts1d4AIEq0vBHSj5dNbYBwzdvJUFtAhnNJryj5k000e8ZvJdW';
-  final _secretKeyTest ='sk_test_51Pc5xWRunBM6ve3ypKKr9b6eu3ahTJAv6YNAqWQmTBiauJssC8MOfkVsgCf7nO9aDZ0n7f1vp2fEW16Z9jYheGks00nFqDFpW7';
-      //'sk_test_51Pfzw1RumBeUNDT0U8uNKJusg891Q1K04lBdqlo8D2tZK8klrwADW3k96blMEJ0nlM43NEwNhc7LB3yFVsKIhYh9001D3vNDlW';
-      //'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';
+  
+  final String _publishableKeyTest = 'pk_live_51Pfzw1RumBeUNDT0vz8WmbhnGAgUoYqNyDSmYzRaS8yC3ghhWts1d4AIEq0vBHSj5dNbYBwzdvJUFtAhnNJryj5k000e8ZvJdW';
+  final String _secretKeyTest = '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';
 
   Future<void> initialize() async {
     Stripe.publishableKey = _publishableKeyTest;
@@ -32,117 +29,65 @@ class StripeServices {
     int amountInt = amountInCents.ceil();
     return amountInt.toString();
   }
-
-  Future<bool> _isGooglePayAvailable() async {
-    final params = IsGooglePaySupportedParams();
-    return await Stripe.instance.isGooglePaySupported(params);
-  }
-
-
-
-  Future<void> startPurchase(
-    double amount, 
-    Future<void> Function(bool, String) purchaseHook,
-    BuildContext context
-  ) async {
-    isLoading.value = true;
-    try {
-      await initialize();
-      Map<String, dynamic>? paymentIntentData =
-          await _getPaymentIntent(_calculate(amount), 'USD');
-      if (paymentIntentData == null) {
-        print('Payment Intent Error!. Payment failed, please try again.');
-        return;
-      }
-      print("}}}}}}}}}}}}}}}}}}}}}}}}}");
-      print("Payment Intent Data: $paymentIntentData");
-      print("Payment intent key: ${paymentIntentData['client_secret']}");
-
-      //bool isGooglePayAvailable = await Stripe.instance.isGooglePaySupported(IsGooglePaySupportedParams());
-      bool isGooglePayAvailable = await Stripe.instance.isPlatformPaySupported(googlePay: IsGooglePaySupportedParams());
-      if (isGooglePayAvailable) {
-        print("Google pay is available");
-        await startGooglePay(purchaseHook, paymentIntentData['client_secret']);
-      } else {
-        print('Google Pay is not available on this device.');
-        await Stripe.instance.initPaymentSheet(
-          paymentSheetParameters: SetupPaymentSheetParameters(
-            paymentIntentClientSecret: paymentIntentData['client_secret'],
-            customerEphemeralKeySecret: paymentIntentData['ephemeralKey'],
-            customerId: paymentIntentData['id'],
-            applePay: Platform.isIOS ? PaymentSheetApplePay(merchantCountryCode: 'US') : null,
-            googlePay: PaymentSheetGooglePay(
-                merchantCountryCode: 'US',
-                currencyCode: 'USD',
-                testEnv: isDebugMode,
-                buttonType: PlatformButtonType.googlePayMark
-            ),
-            style: ThemeMode.light,
-            merchantDisplayName: 'My Ticket',
-          ),
-        ).then((val) async {
-          await _showPaymentIntentSheet(purchaseHook);
-        });
-      }
-    } catch (e, s) {
-      log('@startPurchase onCatch=====> $e\n$s');
-      purchaseHook.call(false, e.toString());
-    } finally {
-      isLoading.value = false;
+Future<void> startPurchase(
+  double amount, 
+  Future<void> Function(bool, String) purchaseHook,
+  BuildContext context
+) async {
+  isLoading.value = true;
+  try {
+    await initialize();
+    Map<String, dynamic>? paymentIntentData =
+        await _getPaymentIntent(_calculate(amount), 'USD');
+    if (paymentIntentData == null) {
+      print('Payment Intent Error!. Payment failed, please try again.');
+      return;
     }
-  }
+    print("}}}}}}}}}}}}}}}}}}}}}}}}}");
+    print("Payment Intent Data: $paymentIntentData");
+    print("Payment intent key: ${paymentIntentData['client_secret']}");
 
- /*     await Stripe.instance
-          .initPaymentSheet(
+    bool isGooglePayAvailable = await Stripe.instance.isPlatformPaySupported(
+      googlePay: IsGooglePaySupportedParams(),
+    );
+    if (isGooglePayAvailable) {
+      print("Google pay is available");
+      await startGooglePay(purchaseHook, paymentIntentData['client_secret']);
+    } else {
+      print('Google Pay is not available on this device.');
+      await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
           paymentIntentClientSecret: paymentIntentData['client_secret'],
           customerEphemeralKeySecret: paymentIntentData['ephemeralKey'],
           customerId: paymentIntentData['id'],
-          applePay: Platform.isIOS
-              ? PaymentSheetApplePay(
-                  merchantCountryCode: 'US',
-                  buttonType: PlatformButtonType.values.first
-                )
-              : null,
+          applePay: Platform.isIOS ? PaymentSheetApplePay(merchantCountryCode: 'US') : null,
           googlePay: PaymentSheetGooglePay(
-            merchantCountryCode: 'US',
-            currencyCode : 'USD',
-            testEnv: isDebugMode,
-            amount: _calculate(amount),
-            ///CHANGED BUTTON TYPEEE
-            buttonType: PlatformButtonType.googlePayMark
-            //buttonType: PlatformButtonType.buy
+              merchantCountryCode: 'US',
+              currencyCode: 'USD',
+              testEnv: isDebugMode,
+              buttonType: PlatformButtonType.googlePayMark
           ),
           style: ThemeMode.light,
           merchantDisplayName: 'My Ticket',
-
         ),
-      )
-          .then((val) async {
-            print("Should show google pay");
+      ).then((val) async {
         await _showPaymentIntentSheet(purchaseHook);
       });
-    } catch (e, s) {
-      log('@startPurchase onCatch=====> $e\n$s');
-      purchaseHook.call(false, e.toString());
     }
-    finally {
-      isLoading.value = false;
-    }
-  }*/
+  } catch (e, s) {
+    log('@startPurchase onCatch=====> $e\n$s');
+    purchaseHook.call(false, e.toString());
+  } finally {
+    isLoading.value = false;
+  }
+}
 
-
- Future<void> startGooglePay(Future<void> Function(bool, String) purchaseHook, String clientSecret) async {
-  final googlePaySupported = await Stripe.instance
-      .isPlatformPaySupported(googlePay: IsGooglePaySupportedParams());
-  if (googlePaySupported) {
-    try {
-      // 1. fetch Intent Client Secret from backend
-
-      const clientSecret = 'sk_test_51Pc5xWRunBM6ve3ypKKr9b6eu3ahTJAv6YNAqWQmTBiauJssC8MOfkVsgCf7nO9aDZ0n7f1vp2fEW16Z9jYheGks00nFqDFpW7';
-          //'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';
-      // 2.present google pay sheet
-      await Stripe.instance.confirmPlatformPayPaymentIntent(
+  Future<void> startGooglePay(Future<void> Function(bool, String) purchaseHook, String clientSecret) async {
+    final googlePaySupported = await Stripe.instance
+        .isPlatformPaySupported(googlePay: IsGooglePaySupportedParams());
+    if (googlePaySupported) {
+      try {
+        await Stripe.instance.confirmPlatformPayPaymentIntent(
           clientSecret: clientSecret,
           confirmParams: PlatformPayConfirmParams.googlePay(
             googlePay: GooglePayParams(
@@ -152,33 +97,17 @@ class StripeServices {
               currencyCode: 'USD',
             ),
           ),
-           //PresentGooglePayParams(clientSecret: clientSecret),
-          );
-      // Get.snackbar(
-      //   const SnackBar(
-      //       content: Text('Google Pay payment succesfully completed')),
-      // );
-    } catch (e) {
-      if (e is StripeException) {
-        log('Error during google pay',
-            error: e.error, stackTrace: StackTrace.current);
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   SnackBar(content: Text('Error: ${e.error}')),
-        // );
-      } else {
-        log('Error during google pay',
-            error: e, stackTrace: (e as Error?)?.stackTrace);
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   SnackBar(content: Text('Error: $e')),
-        // );
+        );
+        await purchaseHook.call(true, 'Google Pay payment successfully completed');
+      } catch (e) {
+        log('Error during Google Pay: $e', error: e, stackTrace: StackTrace.current);
+        await purchaseHook.call(false, 'Google Pay payment failed: $e');
       }
+    } else {
+      log('Google Pay is not supported on this device');
+      await purchaseHook.call(false, 'Google Pay is not supported on this device');
     }
-  } else {
-    // ScaffoldMessenger.of(context).showSnackBar(
-    //   SnackBar(content: Text('Google pay is not supported on this device')),
-    // );
   }
-}
 
   Future<void> _showPaymentIntentSheet(
     Future<void> Function(bool, String message) purchaseHook
@@ -221,5 +150,10 @@ class StripeServices {
       log('@_getPaymentIntentError===>${err.toString()}');
       return null;
     }
+  }
+  
+  Future<bool> _isGooglePayAvailable() async {
+    final params = IsGooglePaySupportedParams();
+    return await Stripe.instance.isGooglePaySupported(params);
   }
 }
