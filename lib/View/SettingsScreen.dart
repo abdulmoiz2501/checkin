@@ -1,3 +1,6 @@
+import 'package:checkin/controllers/settings_controller.dart';
+import 'package:checkin/widgets/progress_indicator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -11,6 +14,7 @@ class AccountSettingsScreen extends StatefulWidget {
 }
 
 class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
+  final SettingsController settingsController = Get.put(SettingsController());
   // Manage checkbox states
   Map<String, bool> emailNotifications = {
     'All notifications': true,
@@ -123,27 +127,27 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                     color: Colors.black,
                   ),
                 ),
-                GestureDetector(
-                  onTap: () {
-                    // Edit action
-                  },
-                  child: Row(
-                    children: [
-                      Text(
-                        'Edit',
-                        style: TextStyle(
-                          fontFamily: 'SFProDisplay',
-                          color: Colors.black,
-                        ),
-                      ),
-                      SizedBox(
-                          width:
-                              4), // Adjust the space between the text and the icon
-                      Image.asset('assets/edit.png',
-                          width: 20, height: 20), // Load your edit image
-                    ],
-                  ),
-                ),
+                // GestureDetector(
+                //   onTap: () {
+                //     // Edit action
+                //   },
+                //   child: Row(
+                //     children: [
+                //       Text(
+                //         'Edit',
+                //         style: TextStyle(
+                //           fontFamily: 'SFProDisplay',
+                //           color: Colors.black,
+                //         ),
+                //       ),
+                //       // SizedBox(
+                //       //     width:
+                //       //         4), // Adjust the space between the text and the icon
+                //       // Image.asset('assets/edit.png',
+                //       //     width: 20, height: 20), // Load your edit image
+                //     ],
+                //   ),
+                // ),
               ],
             ),
             SizedBox(height: 10.0),
@@ -189,7 +193,6 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                 _buildNotificationRow('New connections'),
                 _buildNotificationRow('New messages'),
                 _buildNotificationRow('Promotions'),
-
               ],
             ),
             SizedBox(height: 16.0),
@@ -201,7 +204,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
               ),
             ),
             Divider(color: Color(0xFFEEEEEE)),
-            _buildClickableRow('Subscribe to Checkin' , onTap: () {
+            _buildClickableRow('Subscribe to Checkin', onTap: () {
               Get.to(() => SubscriptionScreen());
             }),
             Divider(color: Color(0xFFEEEEEE)),
@@ -216,7 +219,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
               ),
             ),
             Divider(color: Color(0xFFEEEEEE)),
-            _buildClickableRow('Safety Centre',onTap: () {
+            _buildClickableRow('Safety Centre', onTap: () {
               Get.to(() => SafetyCenterScreen());
             }),
             Divider(color: Color(0xFFEEEEEE)),
@@ -299,7 +302,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
 
   Widget _buildClickableRow(String title, {VoidCallback? onTap}) {
     return GestureDetector(
-      onTap:  onTap,
+      onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Row(
@@ -341,7 +344,6 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
             },
             activeColor: gradientLeft,
           ),
-
         ],
       ),
     );
@@ -365,6 +367,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
       ),
     );
   }
+
   void _showDeleteAccountDialog() {
     showDialog(
       context: context,
@@ -408,8 +411,10 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                 ),
                 SizedBox(height: 16.0),
                 ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
+                  onPressed: () async {
+                    await settingsController.deleteAccount(FirebaseAuth
+                        .instance.currentUser!.uid); // Pass the user ID here
+
                     ///DELETE ACC
                   },
                   style: ElevatedButton.styleFrom(
@@ -419,12 +424,16 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                     ),
                     padding: EdgeInsets.symmetric(horizontal: 78, vertical: 12),
                   ),
-                  child: Text(
-                    'Delete',
-                    style: TextStyle(
-                      fontFamily: 'SFProDisplay',
-                      color: Colors.white,
-                    ),
+                  child: Obx(
+                    () => settingsController.isLoading.value
+                        ? CustomCircularProgressIndicator()
+                        : Text(
+                            'Delete',
+                            style: TextStyle(
+                              fontFamily: 'SFProDisplay',
+                              color: Colors.white,
+                            ),
+                          ),
                   ),
                 ),
                 SizedBox(height: 8.0),
@@ -448,6 +457,4 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
       },
     );
   }
-
 }
-

@@ -1,3 +1,4 @@
+import 'package:checkin/View/SubscriptionScreen.dart';
 import 'package:checkin/constants/colors.dart';
 import 'package:checkin/widgets/map_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -31,7 +32,6 @@ class _HomeScreenState extends State<HomeScreen> {
       showCustomSnackbar(context, Colors.black,
           'Select a venue to see more details and Checkin.');
     });
-
   }
 
   @override
@@ -50,13 +50,13 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             icon: Image.asset('assets/venue_icon.png'),
             onPressed: () {
-              Get.to(()=> SafetyCenterScreen());
+              Get.to(() => SafetyCenterScreen());
             },
           ),
           IconButton(
             icon: Image.asset('assets/setting_icon.png'),
             onPressed: () {
-              Get.to(()=> AccountSettingsScreen());
+              Get.to(() => AccountSettingsScreen());
             },
           ),
         ],
@@ -112,18 +112,22 @@ class _HomeScreenState extends State<HomeScreen> {
             //HorizontalListView(items: items),
             Obx(() {
               if (venueController.isLoading.value) {
-                return Center(child:  CustomCircularProgressIndicator());
-              }
-              else {
-                List<Map<String, String?>> items = venueController.venues.map((venue) => {
-                  'image': venue.imageUrls.isNotEmpty ? venue.imageUrls[0] : null,
-                  'title': venue.name,
-                  'placeId': venue.placeId,
-                }).toList();
+                return Center(child: CustomCircularProgressIndicator());
+              } else {
+                List<Map<String, String?>> items = venueController.venues
+                    .map((venue) => {
+                          'image': venue.imageUrls.isNotEmpty
+                              ? venue.imageUrls[0]
+                              : null,
+                          'title': venue.name,
+                          'placeId': venue.placeId,
+                        })
+                    .toList();
                 if (items.isEmpty) {
                   return Container(
                     padding: EdgeInsets.all(12.0),
-                    margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+                    margin:
+                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
                     decoration: BoxDecoration(
                       color: Colors.grey.shade200,
                       borderRadius: BorderRadius.circular(16.0),
@@ -160,11 +164,10 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.65,
               child: MapWidget(),
-              ),
+            ),
           ],
         ),
       ),
-
     );
   }
 }

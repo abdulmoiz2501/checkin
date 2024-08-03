@@ -2,10 +2,7 @@
 
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'dart:io';
-import 'package:http_parser/http_parser.dart';
-import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../models/edit_profile_model.dart';
@@ -30,14 +27,12 @@ class EditProfileController extends GetxController {
       return file.writeAsBytes(response.bodyBytes);
     }
 
-
     if (profile.localImages != null) {
       for (var imagePath in profile.localImages!) {
         if (imagePath != null) {
           request.files.add(await http.MultipartFile.fromPath(
             'profilePicUrl',
             imagePath,
-
           ));
         }
       }
@@ -82,5 +77,5 @@ class EditProfileController extends GetxController {
     } finally {
       isLoading.value = false;
     }
-    }
+  }
 }

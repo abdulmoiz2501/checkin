@@ -22,9 +22,9 @@ class EditProfileModel {
     return {
       'gender': gender,
       'sex': sex,
-      'height': height.toString(),
+      'height': height != null ? height.toString() : '',
       'description': description,
-      'imagesToKeep'  : serverImageUrls?.join(',') ?? '',
+      'imagesToKeep': serverImageUrls?.join(',') ?? '',
       // Add other fields as necessary
     };
   }

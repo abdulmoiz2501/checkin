@@ -202,9 +202,4 @@ class StripeServices {
       return null;
     }
   }
-
-  Future<bool> _isGooglePayAvailable() async {
-    final params = IsGooglePaySupportedParams();
-    return await Stripe.instance.isGooglePaySupported(params);
-  }
 }

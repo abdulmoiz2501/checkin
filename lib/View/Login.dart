@@ -3,6 +3,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:googleapis/androidmanagement/v1.dart';
+import 'package:googleapis/bigquery/v2.dart';
 
 import '../constants/ScreenUtils.dart';
 import '../constants/colors.dart';
@@ -162,7 +164,8 @@ class Login extends StatelessWidget {
                         text: 'Terms of Use ',
                         style: TextStyle(
                           fontFamily: 'SFProDisplay',
-                          fontWeight: FontWeight.normal, // Change from bold to normal
+                          fontWeight:
+                              FontWeight.normal, // Change from bold to normal
                           color: textBlackColor, // Change color as needed
                           decoration: TextDecoration.underline,
                         ),
@@ -184,7 +187,8 @@ class Login extends StatelessWidget {
                         text: 'Privacy Policy',
                         style: TextStyle(
                           fontFamily: 'SFProDisplay',
-                          fontWeight: FontWeight.normal, // Change from bold to normal
+                          fontWeight:
+                              FontWeight.normal, // Change from bold to normal
                           color: textBlackColor, // Change color as needed
                           decoration: TextDecoration.underline,
                         ),
@@ -198,7 +202,6 @@ class Login extends StatelessWidget {
                   ),
                 ),
               ),
-
             ],
           ),
         ),

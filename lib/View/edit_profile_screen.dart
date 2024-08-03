@@ -29,15 +29,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   List<File?> _images = List<File?>.filled(4, null).obs;
   List<String> _serverImageUrls = <String>[].obs; // URLs from server
 
-
-
   RxString selectedGender = 'Male'.obs;
   //  selectedGender.value = controller.userProfile.value.gender;
 
   RxString selectedOption = ''.obs;
 
   final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
-  GlobalKey<ScaffoldMessengerState>();
+      GlobalKey<ScaffoldMessengerState>();
 
   Future<void> _pickImage(int index) async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -53,7 +51,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController heightController = TextEditingController();
   final EditProfileController editProfileController =
-  Get.put(EditProfileController());
+      Get.put(EditProfileController());
 
   List<String> _getImagePaths() {
     return _images
@@ -61,13 +59,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         .map((file) => file!.path)
         .toList();
   }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _serverImageUrls.clear();
-    for(String i in controller.images.value)
-    {
+    for (String i in controller.images.value) {
       _serverImageUrls.add(i);
     }
   }
@@ -77,6 +75,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     selectedGender.value = controller.userProfile.value!.gender;
     selectedOption.value = controller.userProfile.value!.sex;
     descriptionController.text = controller.userProfile.value!.description;
+    heightController.text = controller.userProfile.value!.height.toString();
 
     //print('this is the url of the image ${controller.images.value.first}');
     return Scaffold(
@@ -110,7 +109,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               padding: EdgeInsets.zero,
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap:
-              true, // Important for GridView inside SingleChildScrollView
+                  true, // Important for GridView inside SingleChildScrollView
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 6.0,
@@ -125,58 +124,57 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       GestureDetector(
                         onTap: () async {
                           await _pickImage(index);
-                          setState(
-                                  () {});
+                          setState(() {});
                         },
                         child: _images[index] != null
                             ? ClipRRect(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(16.0),
-                            topRight: Radius.circular(16.0),
-                            bottomLeft: Radius.circular(16.0),
-                            bottomRight: Radius.circular(16.0),
-                          ), // Set the radius for rounded corners
-                          child: Image.file(
-                            _images[index]!,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: double.infinity,
-                          ),
-                        )
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(16.0),
+                                  topRight: Radius.circular(16.0),
+                                  bottomLeft: Radius.circular(16.0),
+                                  bottomRight: Radius.circular(16.0),
+                                ), // Set the radius for rounded corners
+                                child: Image.file(
+                                  _images[index]!,
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                ),
+                              )
                             : index < _serverImageUrls.length
-                            ? ClipRRect(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(16.0),
-                            topRight: Radius.circular(16.0),
-                            bottomLeft: Radius.circular(16.0),
-                            bottomRight: Radius.circular(16.0),
-                          ), // Set the radius for rounded corners
-                          child: Image.network(
-                            _serverImageUrls[index],
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: double.infinity,
-                            loadingBuilder:
-                                (context, child, loadingProgress) {
-                              if (loadingProgress == null)
-                                return child;
-                              return Center(
-                                  child:
-                                  CustomCircularProgressIndicator()); // Display a loading indicator
-                            },
-                            errorBuilder:
-                                (context, error, stackTrace) {
-                              return Icon(Icons
-                                  .error); // Display an error icon
-                            },
-                          ),
-                        )
-                            : ClickableSquare(
-                          onTap: () async {
-                            await _pickImage(index);
-                            setState(() {});
-                          },
-                        ),
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(16.0),
+                                      topRight: Radius.circular(16.0),
+                                      bottomLeft: Radius.circular(16.0),
+                                      bottomRight: Radius.circular(16.0),
+                                    ), // Set the radius for rounded corners
+                                    child: Image.network(
+                                      _serverImageUrls[index],
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                      loadingBuilder:
+                                          (context, child, loadingProgress) {
+                                        if (loadingProgress == null)
+                                          return child;
+                                        return Center(
+                                            child:
+                                                CustomCircularProgressIndicator()); // Display a loading indicator
+                                      },
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return Icon(Icons
+                                            .error); // Display an error icon
+                                      },
+                                    ),
+                                  )
+                                : ClickableSquare(
+                                    onTap: () async {
+                                      await _pickImage(index);
+                                      setState(() {});
+                                    },
+                                  ),
                       ),
                       if (_images[index] != null)
                         Positioned(
@@ -272,7 +270,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 maxLines: 3,
                 decoration: InputDecoration(
                     hintText:
-                    'Write a sentence about yourself. For example: “Adventure seeker with a passion for exploring new horizons”',
+                        'Write a sentence about yourself. For example: “Adventure seeker with a passion for exploring new horizons”',
                     hintStyle: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
@@ -281,7 +279,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       fontFamily: 'SFProDisplay',
                     ),
                     contentPadding:
-                    EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0)),
+                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0)),
               ),
             ),
             SizedBox(height: 16.0),
@@ -307,35 +305,39 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
             SizedBox(height: 10.0),
-            Obx(()=>GenderSelectionTile(
-              title: 'Male',
-              iconPath: 'assets/male.png', // Replace with your actual icon path
-              isSelected: selectedGender.value == 'Male',
-              onTap: () {
-                selectedGender.value = 'Male';
-              },
-            ), ),
-
-            Obx(()=> GenderSelectionTile(
-              title: 'Female',
-              iconPath:
-              'assets/female.png', // Replace with your actual icon path
-              isSelected: selectedGender == 'Female',
-              onTap: () {
-                selectedGender.value = 'Female';
-              },
-            ),),
-
-            Obx(()=> GenderSelectionTile(
-              title: 'Non Binary',
-              iconPath:
-              'assets/binary.png', // Replace with your actual icon path
-              isSelected: selectedGender.value == 'Non Binary',
-              onTap: () {
-                selectedGender.value = 'Non Binary';
-              },
-            ),),
-
+            Obx(
+              () => GenderSelectionTile(
+                title: 'Male',
+                iconPath:
+                    'assets/male.png', // Replace with your actual icon path
+                isSelected: selectedGender.value == 'Male',
+                onTap: () {
+                  selectedGender.value = 'Male';
+                },
+              ),
+            ),
+            Obx(
+              () => GenderSelectionTile(
+                title: 'Female',
+                iconPath:
+                    'assets/female.png', // Replace with your actual icon path
+                isSelected: selectedGender == 'Female',
+                onTap: () {
+                  selectedGender.value = 'Female';
+                },
+              ),
+            ),
+            Obx(
+              () => GenderSelectionTile(
+                title: 'Non Binary',
+                iconPath:
+                    'assets/binary.png', // Replace with your actual icon path
+                isSelected: selectedGender.value == 'Non Binary',
+                onTap: () {
+                  selectedGender.value = 'Non Binary';
+                },
+              ),
+            ),
             SizedBox(height: 16.0),
             Text(
               'Height (optional)',
@@ -379,7 +381,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       fontFamily: 'SFProDisplay',
                     ),
                     contentPadding:
-                    EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0)),
+                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0)),
               ),
             ),
             SizedBox(height: 16.0),
@@ -407,7 +409,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 7.0),
               child: Obx(
-                    () => SelectableButtonGroup(
+                () => SelectableButtonGroup(
                   options: [
                     'Friends',
                     'Networking',
@@ -421,9 +423,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     'Drinking buddies'
                   ],
                   initialSelected: selectedOption.value,
-                  onSelected: (value) {
-
-                  },
+                  onSelected: (value) {},
                 ),
               ),
             ),
@@ -481,7 +481,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 7.0),
               child: Obx(
-                    () => SelectableButtonGroup(
+                () => SelectableButtonGroup(
                   options: [
                     'Straight',
                     'Gay',
@@ -514,15 +514,30 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
               child: ElevatedButton(
                 onPressed: () async {
+                  if (_serverImageUrls.isEmpty &&
+                      _images.where((file) => file != null).isEmpty) {
+                    Get.snackbar(
+                      "Error",
+                      "Please select at least one image",
+                      backgroundColor: Colors.red,
+                      colorText: Colors.white,
+                    );
+                    return; // Do not proceed if there are no images
+                  }
+
+                  final x = _serverImageUrls.join(',');
+                  print('images: $x');
                   final EditProfileModel profile = EditProfileModel(
                     gender: selectedGender.value,
                     sex: selectedOption.value,
                     height: double.parse(heightController.text),
                     description: descriptionController.text.trim(),
-                    localImages: _images.isNotEmpty?_getImagePaths() : null,
-                    serverImageUrls: _serverImageUrls.isNotEmpty ? _serverImageUrls : null,
+                    localImages: _images.isNotEmpty ? _getImagePaths() : null,
+                    serverImageUrls:
+                        _serverImageUrls.isNotEmpty ? _serverImageUrls : null,
                   );
-                  await editProfileController.updateProfile(FirebaseAuth.instance.currentUser!.uid, profile);
+                  await editProfileController.updateProfile(
+                      FirebaseAuth.instance.currentUser!.uid, profile);
 
                   // if (_images.where((image) => image != null).length == 4) {
                   //   final EditProfileModel profile = EditProfileModel(
@@ -554,19 +569,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     borderRadius: BorderRadius.circular(25),
                   ),
                   child: Obx(
-                        () => editProfileController.isLoading.value
+                    () => editProfileController.isLoading.value
                         ? CustomCircularProgressIndicator()
                         : Container(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "Save",
-                        style: TextStyle(
-                          color: textInvertColor,
-                          fontFamily: 'SFProDisplay',
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
+                            alignment: Alignment.center,
+                            child: Text(
+                              "Save",
+                              style: TextStyle(
+                                color: textInvertColor,
+                                fontFamily: 'SFProDisplay',
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
                   ),
                 ),
               ),
@@ -579,24 +594,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Widget imagePickerCard(bool isCancel, int index) {
     return Stack(
-        children: [
-    Padding(
-    padding: EdgeInsets.all(6.0),
-    child: Container(
-    decoration: BoxDecoration(
-    color: Colors.grey.shade200,
-    borderRadius: BorderRadius.circular(16.0),
-    ),
-    child: Center(
-    child: isCancel == false
-    ? Icon(
-    Icons.add_circle,
-    size: 30.0,
-    color: Colors.black,
-    )
-        : null)),
-    ),
-    /*isCancel
+      children: [
+        Padding(
+          padding: EdgeInsets.all(6.0),
+          child: Container(
+              decoration: BoxDecoration(
+                color: Colors.grey.shade200,
+                borderRadius: BorderRadius.circular(16.0),
+              ),
+              child: Center(
+                  child: isCancel == false
+                      ? Icon(
+                          Icons.add_circle,
+                          size: 30.0,
+                          color: Colors.black,
+                        )
+                      : null)),
+        ),
+        /*isCancel
             ? Positioned(
                 bottom: MediaQuery.of(Get.context!).size.width * -0.03,
                 right: MediaQuery.of(Get.context!).size.width * -0.03,
@@ -623,7 +638,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ) // Replace with your actual icon path
               )
             : SizedBox()*/
-    ],
+      ],
     );
-    }
+  }
 }

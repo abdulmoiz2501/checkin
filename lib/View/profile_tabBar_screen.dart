@@ -5,12 +5,10 @@ import 'package:get/get.dart';
 
 import '../constants/colors.dart';
 
-
 class ProfileTabBArScreen extends StatefulWidget {
   ProfileTabBArScreen({
     Key? key,
   }) : super(key: key);
-
 
   @override
   State<ProfileTabBArScreen> createState() => _ProfileTabBArScreenState();
@@ -24,45 +22,46 @@ class _ProfileTabBArScreenState extends State<ProfileTabBArScreen> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: SizedBox(
-              width: 20,
-              height: 20,
-              child: Image.asset('assets/back_arrow.png'),
-            ),
-            onPressed: () {
-              Get.back();
-            },
-          ),
-        ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Your Profile',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'SFProDisplay',
+          appBar: AppBar(
+            leading: IconButton(
+              icon: SizedBox(
+                width: 20,
+                height: 20,
+                child: Image.asset('assets/back_arrow.png'),
               ),
-            ).marginSymmetric(horizontal: 16.0),
-            SizedBox(height: 8.0,),
-          const TabBar(
-            indicatorSize: TabBarIndicatorSize.tab,
-              tabs: [
-                Tab(
-                  child: Text(
+              onPressed: () {
+                Get.back();
+              },
+            ),
+          ),
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Your Profile',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'SFProDisplay',
+                ),
+              ).marginSymmetric(horizontal: 16.0),
+              SizedBox(
+                height: 8.0,
+              ),
+              const TabBar(
+                indicatorSize: TabBarIndicatorSize.tab,
+                tabs: [
+                  Tab(
+                      child: Text(
                     'Preview',
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
                       fontFamily: 'SFProDisplay',
                     ),
-                  )
-                ),
-                Tab(
-                  child: Text(
+                  )),
+                  Tab(
+                      child: Text(
                     'Edit Profile',
                     style: TextStyle(
                       fontSize: 12,
@@ -70,25 +69,25 @@ class _ProfileTabBArScreenState extends State<ProfileTabBArScreen> {
                       fontFamily: 'SFProDisplay',
                       //color: textBlackColor,
                     ),
-                  )
-                ),
-              ],
-              indicatorColor: textMainColor,
-              labelColor: textMainColor,
-              unselectedLabelColor: Colors.grey,
-            ),
-            Expanded(
-              child: TabBarView(
-                // index: selectedIndex.value,
-                children: [
-                  YourProfileScreen(),
-                  EditProfileScreen()
+                  )),
                 ],
+                indicatorColor: textMainColor,
+                labelColor: textMainColor,
+                unselectedLabelColor: Colors.grey,
               ),
-            ),
-          ],
-        )
-      ),
+              Expanded(
+                child: TabBarView(
+                  // index: selectedIndex.value,
+                  children: [
+                    YourProfileScreen(),
+                    EditProfileScreen(
+                      key: UniqueKey(),
+                    )
+                  ],
+                ),
+              ),
+            ],
+          )),
     );
   }
 }
