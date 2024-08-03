@@ -1,16 +1,26 @@
 import 'dart:convert';
+import 'package:checkin/controllers/user_controller.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
 import '../models/venue_model.dart';
 
 class PlacesService {
   final String apiKey = 'AIzaSyCRxb4QueUWp9LKMm9QdMLr8_RZf7i3ExM';
+final UserController userController = Get.find();
 
   Future<List<Venue>> getNearbyVenues(Position position, String type) async {
+    String radius = '250'; // 500 meter km radius
+    await userController.fetchUser(FirebaseAuth.instance.currentUser!.uid);
+    if(userController.user.value.subscribed != false ){
+  radius = '500';
+    }
     final url = Uri.parse(
       'https://maps.googleapis.com/maps/api/place/nearbysearch/json'
           '?location=${position.latitude},${position.longitude}'
-          '&radius=250' // 500 meter km radius
+          '&radius=$radius' // 500 meter km radius
           '&type=$type'
           '&key=$apiKey',
     );

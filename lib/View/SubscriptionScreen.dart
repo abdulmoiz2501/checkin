@@ -73,10 +73,24 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   int _currentIndex = 0;
   final SubscriptionController subscriptionController = Get.put(SubscriptionController());
 
+  String getCurrentPrice() {
+    switch (_currentIndex) {
+      case 0:
+        return '5.99';
+      case 1:
+        return '12.99';
+      case 2:
+        return (7.99 * 4).toStringAsFixed(2); // For 1 month
+      case 3:
+        return (6.99 * 4 * 3).toStringAsFixed(2); // For 3 months
+      default:
+        return '5.99';
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
+      body: Container(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -119,7 +133,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 16),
+              //SizedBox(height: MediaQuery.of(context).size.height * 0.01,),
               Center(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -150,7 +164,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                   ],
                 ),
               ),
-              SizedBox(height: 16),
+              //SizedBox(height: 16),
               Center(
                 child: Text(
                   'Select a subscription option that is a right fit for you.',
@@ -162,7 +176,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: MediaQuery.of(context).size.height *0.013),
               // Carousel slider
               Container(
                 height: 250,
@@ -222,29 +236,32 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 16),
+              //SizedBox(height: 16),
               // Box with features
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    _buildFeatureRow('assets/heart.png',
-                        'Send as many connection requests as you like'),
-                    _buildFeatureRow('assets/map.png',
-                        'Increase map radius from 250m to 500m'),
-                    _buildFeatureRow(
-                        'assets/eye.png', 'See everyone who likes you'),
-                    _buildFeatureRow('assets/double_up.png',
-                        'Jump to the top of the list at venues'),
-                  ],
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      _buildFeatureRow('assets/heart.png',
+                          'Send as many connection requests as you like'),
+                      _buildFeatureRow('assets/map.png',
+                          'Increase map radius from 250m to 500m'),
+                      _buildFeatureRow(
+                          'assets/eye.png', 'See everyone who likes you'),
+                      _buildFeatureRow('assets/double_up.png',
+                          'Jump to the top of the list at venues'),
+                    ],
+                  ),
                 ),
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.09,
+                height: MediaQuery.of(context).size.height * 0.05,
               ),
               // Subscribe button
               /*Obx(() => Container(
@@ -510,7 +527,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                         valueColor: AlwaysStoppedAnimation<Color>(textInvertColor),
                       )
                           : Text(
-                        "Subscribe",
+                        "Subscribe for \$${getCurrentPrice()}",
                         style: TextStyle(
                           color: textInvertColor,
                           fontFamily: 'SFProDisplay',
@@ -520,8 +537,19 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                     ),
                   ),
                 )),
-              )
-
+              ),
+              SizedBox(height: 5),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('Your subscription will auto-renew for the same price and package length until you cancel via App Store settings, and you areee to out terms.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: Colors.grey,
+                    fontFamily: 'SFProDisplay',
+                  ),
+                ),
+              ),
             ],
           ),
         ),

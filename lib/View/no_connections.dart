@@ -34,7 +34,7 @@ class _NoConnectionsState extends State<NoConnections> {
       "title": "WEEKEND",
       "description":
           "The fun starts when Friday finishes. Premium from Friday to Sunday.",
-      "price": "3.99",
+      "price": "5.99",
       "textColor": Colors.white,
       "backgroundColor": Color(0xFF21262D),
       "outlineColor": Colors.black,
@@ -44,7 +44,7 @@ class _NoConnectionsState extends State<NoConnections> {
       "title": "1 WEEK",
       "description":
           "See what premiums about and Increase your odds of an interesting connection.",
-      "price": "9.99",
+      "price": "12.99",
       "textColor": gradientLeft,
       "backgroundColor": Color(0xFFFFF9F8),
       "outlineColor": gradientRight,
@@ -54,7 +54,7 @@ class _NoConnectionsState extends State<NoConnections> {
       "title": "1 MONTH",
       "description":
           "Connect with new friends and make it a memorable month of meet-ups.",
-      "price": "5.99",
+      "price": "7.99",
       "textColor": gradientLeft,
       "backgroundColor": Color(0xFFFFF9F8),
       "outlineColor": gradientRight,
@@ -64,13 +64,27 @@ class _NoConnectionsState extends State<NoConnections> {
       "title": "3 MONTHS",
       "description":
           "Grow your social circle, make memories and stash come cash.",
-      "price": "4.99",
+      "price": "6.99",
       "textColor": gradientLeft,
       "backgroundColor": Color(0xFFFFF9F8),
       "outlineColor": gradientRight,
       "asset": 'assets/logo_black.png',
     },
   ];
+  String getCurrentPrice() {
+    switch (_currentIndex) {
+      case 0:
+        return '5.99';
+      case 1:
+        return '12.99';
+      case 2:
+        return (7.99 * 4).toStringAsFixed(2); // For 1 month
+      case 3:
+        return (6.99 * 4 * 3).toStringAsFixed(2); // For 3 months
+      default:
+        return '5.99';
+    }
+  }
   @override
   void initState() {
     super.initState();
@@ -385,7 +399,7 @@ class _NoConnectionsState extends State<NoConnections> {
                             child: subscriptionController.isLoading.value
                                 ? CustomCircularProgressIndicator()
                                 : Text(
-                                    "Subscribe",
+                                    "Subscribe for \$${getCurrentPrice()}",
                                     style: TextStyle(
                                       color: textInvertColor,
                                       fontFamily: 'SFProDisplay',

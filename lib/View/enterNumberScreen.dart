@@ -21,7 +21,7 @@ class _NumberScreenState extends State<NumberScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
 
-  String _selectedCountryCode = '+92';
+  String _selectedCountryCode = '+61';
   final AuthService _authService = AuthService();
   bool _isLoading = false;
 

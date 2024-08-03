@@ -113,31 +113,58 @@ class _HomeScreenState extends State<HomeScreen> {
             Obx(() {
               if (venueController.isLoading.value) {
                 return Center(child:  CustomCircularProgressIndicator());
-              } else {
+              }
+              else {
                 List<Map<String, String?>> items = venueController.venues.map((venue) => {
                   'image': venue.imageUrls.isNotEmpty ? venue.imageUrls[0] : null,
                   'title': venue.name,
                   'placeId': venue.placeId,
                 }).toList();
-                return HorizontalListView(items: items);
+                if (items.isEmpty) {
+                  return Container(
+                    padding: EdgeInsets.all(12.0),
+                    margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(16.0),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'No venues nearby',
+                          style: TextStyle(
+                            fontFamily: 'SFProDisplay',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16.0,
+                          ),
+                        ),
+                        SizedBox(height: 2.0),
+                        Text(
+                          'It seems there are no venues nearby. Please move to a different location to check into a venue.',
+                          style: TextStyle(
+                            fontFamily: 'SFProDisplay',
+                            fontSize: 14.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                } else {
+                  return HorizontalListView(items: items);
+                }
+                //return HorizontalListView(items: items);
               }
             }),
 
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.66,
+              height: MediaQuery.of(context).size.height * 0.65,
               child: MapWidget(),
               ),
           ],
         ),
       ),
-      /*floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showCustomSnackbar(context, Colors.black,
-              'Select a venue to see more details and Checkin.');
-        },
-        child: Icon(Icons.info),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,*/
+
     );
   }
 }

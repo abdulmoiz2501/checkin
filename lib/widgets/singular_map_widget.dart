@@ -328,7 +328,7 @@ class _SingularMapWidgetState extends State<SingularMapWidget> {
         },
         markers: _markers,
         circles: _userCircle != null ? {_userCircle!} : {},
-        myLocationEnabled: false,
+        myLocationEnabled: true,
         myLocationButtonEnabled: false,
         zoomControlsEnabled: false,
       ),

@@ -68,7 +68,7 @@ class _ProfileTabBArScreenState extends State<ProfileTabBArScreen> {
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
                       fontFamily: 'SFProDisplay',
-                      color: textBlackColor,
+                      //color: textBlackColor,
                     ),
                   )
                 ),

@@ -117,14 +117,6 @@ class _SigninState extends State<Signin> {
     }
   }
 
-/*  void _sendSignInLinkToEmail(String email) async {
-    await _authService.sendSignInWithEmailLink(email).whenComplete(() => Get.snackbar(
-      'Email Sent',
-      'A sign-in link has been sent to $email',
-      snackPosition: SnackPosition.BOTTOM,
-    )
-    );
-  }*/
 
   @override
   Widget build(BuildContext context) {

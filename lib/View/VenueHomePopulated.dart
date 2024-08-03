@@ -18,6 +18,7 @@ import '../models/check_out_model.dart';
 import '../models/send_request_model.dart';
 import '../widgets/custom_pop_up.dart';
 import '../widgets/profile_card.dart';
+import 'Preferences_Screen.dart';
 
 class VenueHomePopulated extends StatelessWidget {
   const VenueHomePopulated({Key? key}) : super(key: key);
@@ -74,7 +75,6 @@ class VenueHomePopulated extends StatelessWidget {
                        // Get.back();
                       },
                       onBelowButtonPressed: () {
-                        // Handle "Don't show again" button press
                         Get.back();
                         print("Don't show again tapped");
                       },
@@ -96,7 +96,7 @@ class VenueHomePopulated extends StatelessWidget {
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'SFProDisplay',
-                        color: Colors.white, // This color is just for the mask
+                        color: Colors.white,
                       ),
                     ),
                   ),
@@ -117,7 +117,8 @@ class VenueHomePopulated extends StatelessWidget {
               IconButton(
                 icon: Image.asset('assets/settings.png'), // Path to your settings icon
                 onPressed: () {
-                  Get.to(()=> SubscriptionScreen());
+                  //Get.to(()=> SubscriptionScreen());
+                  Get.to(()=>PreferencesScreen());
                 },
               ),
             ],

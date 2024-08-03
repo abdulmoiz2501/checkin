@@ -121,6 +121,7 @@ class _OtpScreenSignUpState extends State<OtpScreenSignUp> {
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
 /*        leading: IconButton(
           icon: SizedBox(
             width: 20, // Specify the desired width

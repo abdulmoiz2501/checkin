@@ -27,6 +27,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final ViewProfileController controller = Get.find();
 
   List<File?> _images = List<File?>.filled(4, null).obs;
+  List<String> _serverImageUrls = <String>[].obs; // URLs from server
+
+
 
   RxString selectedGender = 'Male'.obs;
   //  selectedGender.value = controller.userProfile.value.gender;
@@ -58,12 +61,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         .map((file) => file!.path)
         .toList();
   }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _serverImageUrls.clear();
+    for(String i in controller.images.value)
+    {
+      _serverImageUrls.add(i);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     selectedGender.value = controller.userProfile.value!.gender;
     selectedOption.value = controller.userProfile.value!.sex;
     descriptionController.text = controller.userProfile.value!.description;
+
     //print('this is the url of the image ${controller.images.value.first}');
     return Scaffold(
       body: SingleChildScrollView(
@@ -112,7 +126,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         onTap: () async {
                           await _pickImage(index);
                           setState(
-                                  () {}); // Trigger a rebuild to show the selected image
+                                  () {});
                         },
                         child: _images[index] != null
                             ? ClipRRect(
@@ -129,7 +143,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             height: double.infinity,
                           ),
                         )
-                            : index < controller.images.length
+                            : index < _serverImageUrls.length
                             ? ClipRRect(
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(16.0),
@@ -138,7 +152,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             bottomRight: Radius.circular(16.0),
                           ), // Set the radius for rounded corners
                           child: Image.network(
-                            controller.images[index],
+                            _serverImageUrls[index],
                             fit: BoxFit.cover,
                             width: double.infinity,
                             height: double.infinity,
@@ -189,14 +203,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             ),
                           ),
                         ),
-                      if (index < controller.images.length)
+                      if (index < _serverImageUrls.length)
                         Positioned(
                           bottom: MediaQuery.of(context).size.width * 0,
                           right: MediaQuery.of(context).size.width * 0,
                           child: GestureDetector(
                             onTap: () {
                               setState(() {
-                                controller.images.removeAt(index);
+                                _serverImageUrls.removeAt(index);
                               }); // Trigger a rebuild to update the UI
                             },
                             child: Container(
@@ -408,7 +422,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ],
                   initialSelected: selectedOption.value,
                   onSelected: (value) {
-                    selectedOption.value = value;
+
                   },
                 ),
               ),
@@ -500,20 +514,30 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
               child: ElevatedButton(
                 onPressed: () async {
-                  if (_images.where((image) => image != null).length == 4) {
-                    final EditProfileModel profile = EditProfileModel(
-                      gender: selectedGender.value,
-                      sex: selectedOption.value,
-                      height: double.parse(heightController.text),
-                      description: descriptionController.text.trim(),
-                      images: _getImagePaths(),
-                    );
-                    await editProfileController.updateProfile(
-                        FirebaseAuth.instance.currentUser!.uid, profile);
-                  } else {
-                    // Show a Snackbar message if not all images are selected
-                    Get.snackbar("Error", "Please select 4 images");
-                  }
+                  final EditProfileModel profile = EditProfileModel(
+                    gender: selectedGender.value,
+                    sex: selectedOption.value,
+                    height: double.parse(heightController.text),
+                    description: descriptionController.text.trim(),
+                    localImages: _images.isNotEmpty?_getImagePaths() : null,
+                    serverImageUrls: _serverImageUrls.isNotEmpty ? _serverImageUrls : null,
+                  );
+                  await editProfileController.updateProfile(FirebaseAuth.instance.currentUser!.uid, profile);
+
+                  // if (_images.where((image) => image != null).length == 4) {
+                  //   final EditProfileModel profile = EditProfileModel(
+                  //     gender: selectedGender.value,
+                  //     sex: selectedOption.value,
+                  //     height: double.parse(heightController.text),
+                  //     description: descriptionController.text.trim(),
+                  //     images: _getImagePaths(),
+                  //   );
+                  //   await editProfileController.updateProfile(
+                  //       FirebaseAuth.instance.currentUser!.uid, profile);
+                  // } else {
+                  //   // Show a Snackbar message if not all images are selected
+                  //   Get.snackbar("Error", "Please select 4 images");
+                  // }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,

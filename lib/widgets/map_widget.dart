@@ -1,9 +1,11 @@
 import 'package:checkin/widgets/progress_indicator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import '../View/VenueSelectedScreen.dart';
+import '../controllers/user_controller.dart';
 import '../controllers/venue_controller.dart';
 import '../controllers/venue_marker_controller.dart';
 
@@ -25,6 +27,8 @@ class _MapWidgetState extends State<MapWidget> {
   double _currentZoomLevel = 16.5;
   final VenueController venueController = Get.put(VenueController());
   final VenueMarkerController venueMarkerController = Get.put(VenueMarkerController());
+  final UserController userController = Get.find();
+
 
   @override
   void initState() {
@@ -35,6 +39,11 @@ class _MapWidgetState extends State<MapWidget> {
   }
 
   Future<void> _initializeData() async {
+    String radius = '250'; // 500 meter km radius
+    await userController.fetchUser(FirebaseAuth.instance.currentUser!.uid);
+    if(userController.user.value.subscribed != false ){
+      radius = '500';
+    }
     await _loadCustomIcons();
     LatLng userLocation = await _getUserLocation();
     setState(() {
@@ -42,7 +51,7 @@ class _MapWidgetState extends State<MapWidget> {
       _userCircle = Circle(
         circleId: CircleId('user_radius'),
         center: userLocation,
-        radius: 250,
+        radius: double.parse(radius),
         fillColor: Colors.orange.withOpacity(0.1),
         strokeColor: Colors.orange.withOpacity(0.5),
         strokeWidth: 1,
@@ -170,6 +179,9 @@ class _MapWidgetState extends State<MapWidget> {
           zoomControlsEnabled: false,
           compassEnabled: false,
           mapToolbarEnabled: false,
+          minMaxZoomPreference: MinMaxZoomPreference(16, null),
+         // minMaxZoomPreference: MinMaxZoomPreference(1, 10),
+         // minMaxZoomPreference: MinMaxZoomPreference(10, 11),
         ),
       ],
     );

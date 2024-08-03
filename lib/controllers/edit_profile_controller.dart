@@ -30,12 +30,16 @@ class EditProfileController extends GetxController {
       return file.writeAsBytes(response.bodyBytes);
     }
 
-    for (var image in profile.images) {
-      if (image != null) {
-        request.files.add(await http.MultipartFile.fromPath(
-          'profilePicUrl',
-          image,
-        ));
+
+    if (profile.localImages != null) {
+      for (var imagePath in profile.localImages!) {
+        if (imagePath != null) {
+          request.files.add(await http.MultipartFile.fromPath(
+            'profilePicUrl',
+            imagePath,
+
+          ));
+        }
       }
     }
 
