@@ -28,9 +28,9 @@ class VenueRefreshController extends GetxController {
       url += '&ageRange=${minAge.value.toInt()}-${maxAge.value.toInt()}';
     }
 
-    // Append check-in goals parameter if checkinGoals are not empty
     if (checkinGoals.isNotEmpty) {
       url += '&checkInGoals=${checkinGoals.join(',')}';
+      //
     }
     print(url);
     final currentUser = FirebaseAuth.instance.currentUser;
