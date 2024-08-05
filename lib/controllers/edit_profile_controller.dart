@@ -9,6 +9,7 @@ import '../models/edit_profile_model.dart';
 
 class EditProfileController extends GetxController {
   var isLoading = false.obs;
+  final RxBool showSexualOrientation = false.obs;
 
   Future<void> updateProfile(String userId, EditProfileModel profile) async {
     isLoading.value = true;
@@ -17,6 +18,7 @@ class EditProfileController extends GetxController {
 
     var request = http.MultipartRequest('PUT', Uri.parse(url));
     request.fields.addAll(profile.toJson());
+    request.fields['rangeFlag'] = showSexualOrientation.value.toString();
 
     // Helper function to download and save network image to file
     Future<File> _downloadFile(String url, String filename) async {

@@ -41,11 +41,10 @@ class CheckInController extends GetxController {
       print('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
-
         final responseBody = json.decode(response.body);
         final checkInResponse = CheckInResponse.fromJson(responseBody);
         checkedInUsers.value.clear();
-       /* for (var user in responseBody['venue']['users'])
+        /* for (var user in responseBody['venue']['users'])
           {
             checkedInUsers.value.add(UserModel.fromJson(user));
           }*/
@@ -89,11 +88,10 @@ class CheckInController extends GetxController {
     print('Filtered Users: ${filteredUsers.length}');
     // print('filtered user name is ${filteredUsers[0].name}   ');
     for (var user in filteredUsers) {
-
-      print('User: ${user.name}, Gender: ${user.gender}'); // Debugging statement
+      print(
+          'User: ${user.name}, Gender: ${user.gender}'); // Debugging statement
     }
   }
-
 
 /*  Future<void> rehitAPI(CheckInRequest request) async {
     isLoading(true);
@@ -132,5 +130,4 @@ class CheckInController extends GetxController {
       isLoading(false);
     }
   }*/
-
 }

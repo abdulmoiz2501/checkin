@@ -11,13 +11,28 @@ class VenueRefreshController extends GetxController {
 
   final currentPlaceId = ''.obs;
   final CheckInController checkInController = Get.find();
+  final RxList<String> checkinGoals = <String>[].obs;
+  final RxDouble minAge = 26.0.obs;
+  final RxDouble maxAge = 70.0.obs;
+  final RxBool isFirstHitDone = false.obs;
+  final RxBool peopleOutsideRange = false.obs;
 
   // Fetch data from the provided API
   Future<void> fetchVenueData() async {
     print("Inside fetchVenueData()...");
     isLoading(true);
 
-    final url = 'https://check-in-apis-e4xj.vercel.app/api/v1/venues/getVenues?placeid=${currentPlaceId.value}&userId=${FirebaseAuth.instance.currentUser?.uid}';
+    String url =
+        'https://check-in-apis-e4xj.vercel.app/api/v1/venues/getVenues?placeid=${currentPlaceId.value}&userId=${FirebaseAuth.instance.currentUser?.uid}';
+    if (isFirstHitDone.value) {
+      url += '&ageRange=${minAge.value.toInt()}-${maxAge.value.toInt()}';
+    }
+
+    // Append check-in goals parameter if checkinGoals are not empty
+    if (checkinGoals.isNotEmpty) {
+      url += '&checkInGoals=${checkinGoals.join(',')}';
+    }
+    print(url);
     final currentUser = FirebaseAuth.instance.currentUser;
 
     try {
@@ -35,15 +50,15 @@ class VenueRefreshController extends GetxController {
           //checkInController.filteredUsers.value.add(UserModel.fromJson(user));
 
           if (user['UId'] != currentUser?.uid) {
-
-            checkInController.checkedInUsers.value.add(UserModel.fromJson(user));
-
+            checkInController.checkedInUsers.value
+                .add(UserModel.fromJson(user));
           }
         }
-        checkInController.filterUsersByGender(checkInController.currentGenderFilter.value);
+        checkInController
+            .filterUsersByGender(checkInController.currentGenderFilter.value);
 
-
-        print('the length of the users is ${checkInController.checkedInUsers.length}');
+        print(
+            'the length of the users is ${checkInController.checkedInUsers.length}');
       } else {
         Get.snackbar('Error', 'Failed to fetch users. Please try again.');
       }

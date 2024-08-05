@@ -450,21 +450,25 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     fontFamily: 'SFProDisplay',
                   ),
                 ),
-                Transform.scale(
-                  scale: 0.7,
-                  child: Switch(
-                    value: true,
-                    onChanged: (value) {
-                      // _themeController.toggleTheme(value);
-                    },
-                    // value: isFirstSwitched.value,
-                    // onChanged: (value) {
-                    //   isFirstSwitched.value = value;
-                    // },
-                    // activeColor: greenColor,
-                    inactiveThumbColor: textInvertColor,
-                    inactiveTrackColor: textBlackColor,
-                    activeTrackColor: textMainColor,
+                Obx(
+                  () => Transform.scale(
+                    scale: 0.7,
+                    child: Switch(
+                      value: editProfileController.showSexualOrientation.value,
+                      onChanged: (value) {
+                        editProfileController.showSexualOrientation.value =
+                            value;
+                        // _themeController.toggleTheme(value);
+                      },
+                      // value: isFirstSwitched.value,
+                      // onChanged: (value) {
+                      //   isFirstSwitched.value = value;
+                      // },
+                      // activeColor: greenColor,
+                      inactiveThumbColor: textInvertColor,
+                      inactiveTrackColor: textBlackColor,
+                      activeTrackColor: textMainColor,
+                    ),
                   ),
                 ),
               ],

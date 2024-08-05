@@ -1,3 +1,7 @@
+import 'package:checkin/controllers/check_in_controller.dart';
+import 'package:checkin/controllers/venue_refresh_controller.dart';
+import 'package:checkin/widgets/multiple_Selectable_Buttons.dart';
+import 'package:checkin/widgets/progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
@@ -10,6 +14,8 @@ class PreferencesScreen extends StatelessWidget {
   final RxDouble minAge = 26.0.obs;
   final RxDouble maxAge = 70.0.obs;
   final RxBool showPeopleOutOfRange = false.obs;
+  final VenueRefreshController venueRefreshController =
+      Get.find<VenueRefreshController>();
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +71,7 @@ class PreferencesScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 7.0),
               child: Obx(
-                    () => SelectableButtonGroup(
+                () => MultipleSelectableButtons(
                   options: [
                     'Friends',
                     'Networking',
@@ -78,9 +84,9 @@ class PreferencesScreen extends StatelessWidget {
                     'Pub crawls',
                     'Drinking buddies'
                   ],
-                  initialSelected: selectedOption.value,
-                  onSelected: (value) {
-                    selectedOption.value = value;
+                  initialSelected: venueRefreshController.checkinGoals.toList(),
+                  onSelected: (selectedGoals) {
+                    venueRefreshController.checkinGoals.value = selectedGoals;
                   },
                 ),
               ),
@@ -97,67 +103,77 @@ class PreferencesScreen extends StatelessWidget {
             ),
             SizedBox(height: 8.0),
             Obx(
-                  () => Stack(
-                    alignment: Alignment.center,
-                    children:[
-                      SfRangeSlider(
-                      min: 18.0,
-                      max: 100.0,
-                      values: SfRangeValues(minAge.value, maxAge.value),
-                      interval: 10,
-                      showTicks: false,
-                      showLabels: false,
-                      enableTooltip: false,
-                      activeColor: Color(0xFFFF7043),
-                      inactiveColor: Color(0xFFEEEEEE),
-                      numberFormat: NumberFormat('##'),
-                      onChanged: (SfRangeValues values) {
-                        minAge.value = values.start;
-                        maxAge.value = values.end;
-                      },
-                      tooltipTextFormatterCallback: (actualValue, formattedText) {
-                        return actualValue.toInt().toString(); // Format the tooltip to show only integer values
-                      }, // Custom thumb shape
+              () => Stack(
+                alignment: Alignment.center,
+                children: [
+                  SfRangeSlider(
+                    min: 18.0,
+                    max: 100.0,
+                    values: SfRangeValues(
+                      venueRefreshController.minAge.value,
+                      venueRefreshController.maxAge.value,
                     ),
-                      Align(
-                        alignment: Alignment(
-                          (2 * ((minAge.value - 18) / (100 - 18)) - 0.978),
-                          -1.5,
-                        ),
-                        child: Container(
-                          transform: Matrix4.translationValues(0, -20, 0),
-                          child: Text(
-                            minAge.value.toInt().toString(),
-                            style: TextStyle(
-                              fontFamily: 'SFProDisplay',
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment(
-                          (2 * ((maxAge.value - 18) / (100 - 18)) - 1.04),
-                          -12,
-                        ),
-                        child: Container(
-                          transform: Matrix4.translationValues(0, -20, 0),
-                          child: Text(
-                            maxAge.value.toInt().toString(),
-                            style: TextStyle(
-                              fontFamily: 'SFProDisplay',
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                    interval: 10,
+                    showTicks: false,
+                    showLabels: false,
+                    enableTooltip: false,
+                    activeColor: Color(0xFFFF7043),
+                    inactiveColor: Color(0xFFEEEEEE),
+                    numberFormat: NumberFormat('##'),
+                    onChanged: (SfRangeValues values) {
+                      venueRefreshController.minAge.value = values.start;
+                      venueRefreshController.maxAge.value = values.end;
+                    },
+                    tooltipTextFormatterCallback: (actualValue, formattedText) {
+                      return actualValue
+                          .toInt()
+                          .toString(); // Format the tooltip to show only integer values
+                    }, // Custom thumb shape
                   ),
-
+                  Align(
+                    alignment: Alignment(
+                      (2 *
+                              ((venueRefreshController.minAge.value - 18) /
+                                  (100 - 18)) -
+                          0.978),
+                      -1.5,
+                    ),
+                    child: Container(
+                      transform: Matrix4.translationValues(0, -20, 0),
+                      child: Text(
+                        venueRefreshController.minAge.value.toInt().toString(),
+                        style: TextStyle(
+                          fontFamily: 'SFProDisplay',
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment(
+                      (2 *
+                              ((venueRefreshController.maxAge.value - 18) /
+                                  (100 - 18)) -
+                          1.04),
+                      -12,
+                    ),
+                    child: Container(
+                      transform: Matrix4.translationValues(0, -20, 0),
+                      child: Text(
+                        venueRefreshController.maxAge.value.toInt().toString(),
+                        style: TextStyle(
+                          fontFamily: 'SFProDisplay',
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
             SizedBox(height: 16.0),
             Row(
@@ -177,13 +193,13 @@ class PreferencesScreen extends StatelessWidget {
                   ),
                 ),
                 Obx(
-                      () => Switch(
-                    value: showPeopleOutOfRange.value,
+                  () => Switch(
+                    value: venueRefreshController.peopleOutsideRange.value,
                     onChanged: (value) {
-                      showPeopleOutOfRange.value = value;
+                      venueRefreshController.peopleOutsideRange.value = value;
                     },
                     activeColor: Colors.white,
-                        activeTrackColor: Color(0xFFFF7043),
+                    activeTrackColor: Color(0xFFFF7043),
                   ),
                 ),
               ],
@@ -199,35 +215,42 @@ class PreferencesScreen extends StatelessWidget {
                   colors: [gradientLeft, gradientRight],
                 ),
               ),
-              child: ElevatedButton(
-                onPressed: () {
-
-
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                ),
-                child: Ink(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [gradientLeft, gradientRight],
+              child: Obx(
+                () => ElevatedButton(
+                  onPressed: () async {
+                    print(venueRefreshController.checkinGoals);
+                    if (venueRefreshController.isLoading.value == false) {
+                      venueRefreshController.isFirstHitDone.value = true;
+                      await venueRefreshController.fetchVenueData();
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
                     ),
-                    borderRadius: BorderRadius.circular(25),
                   ),
-                  child: Container(
-                    alignment: Alignment.center,
-                    child: Text(
-                      "Back ",
-                      style: TextStyle(
-                        color: textInvertColor,
-                        fontFamily: 'SFProDisplay',
-                        fontWeight: FontWeight.w700,
+                  child: Ink(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [gradientLeft, gradientRight],
                       ),
+                      borderRadius: BorderRadius.circular(25),
                     ),
+                    child: venueRefreshController.isLoading.value
+                        ? CustomCircularProgressIndicator()
+                        : Container(
+                            alignment: Alignment.center,
+                            child: Text(
+                              "Back ",
+                              style: TextStyle(
+                                color: textInvertColor,
+                                fontFamily: 'SFProDisplay',
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
                   ),
                 ),
               ),

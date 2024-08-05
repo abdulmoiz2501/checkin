@@ -27,24 +27,27 @@ class VenueHomePopulated extends StatelessWidget {
   Widget build(BuildContext context) {
     final CheckInController checkInController = Get.find();
     final CheckOutController checkOutController = Get.put(CheckOutController());
-    final SendRequestController sendRequestController = Get.put(SendRequestController());
-    final BlockUserController blockUserController = Get.put(BlockUserController());
-    final VenueRefreshController venueRefreshController = Get.put(VenueRefreshController()); // Initialize VenueRefreshController
+    final SendRequestController sendRequestController =
+        Get.put(SendRequestController());
+    final BlockUserController blockUserController =
+        Get.put(BlockUserController());
+    final VenueRefreshController venueRefreshController =
+        Get.put(VenueRefreshController()); // Initialize VenueRefreshController
     User? user = FirebaseAuth.instance.currentUser;
 
-    venueRefreshController.currentPlaceId.value = checkInController.currentPlaceId.value;
+    venueRefreshController.currentPlaceId.value =
+        checkInController.currentPlaceId.value;
     Future<void> _refreshData() async {
       print(
           'Refreshing data for place ${checkInController.currentPlaceId.value}...');
       // Rehit the API to fetch updated list of checked-in users
       await venueRefreshController.fetchVenueData();
-      print('The length of the checked in users is ${checkInController.checkedInUsers.length} ');
-      print('the user of the current place is ${checkInController.checkedInUsers.value[0].name} ');
+      // print('The length of the checked in users is ${checkInController.checkedInUsers.length} ');
+      // print('the user of the current place is ${checkInController.checkedInUsers.value[0].name} ');
     }
 
-
     return Obx(
-      ()=> WillPopScope(
+      () => WillPopScope(
         onWillPop: () async {
           return false;
         },
@@ -59,7 +62,8 @@ class VenueHomePopulated extends StatelessWidget {
                     showCustomPopup(
                       context: context,
                       headingText: 'Leave this venue?',
-                      subText: 'You will not be able to connect with someone new from this venue after checkout.',
+                      subText:
+                          'You will not be able to connect with someone new from this venue after checkout.',
                       buttonText: 'Check out',
                       belowButtonText: 'Don\'t show again',
                       onButtonPressed: () async {
@@ -67,12 +71,13 @@ class VenueHomePopulated extends StatelessWidget {
                         final userId = user?.uid;
                         final placeId = checkInController.currentPlaceId.value;
 
-                        final request = CheckOutRequest(userId: userId!, placeId: placeId);
+                        final request =
+                            CheckOutRequest(userId: userId!, placeId: placeId);
                         await checkOutController.checkOutUser(request);
                         // Handle continue button press
                         print("Check out tapped");
 
-                       // Get.back();
+                        // Get.back();
                       },
                       onBelowButtonPressed: () {
                         Get.back();
@@ -111,27 +116,25 @@ class VenueHomePopulated extends StatelessWidget {
               IconButton(
                 icon: Image.asset('assets/bell.png'), // Path to your bell icon
                 onPressed: () {
-                  Get.to(()=> NewConnectionScreen());
+                  Get.to(() => NewConnectionScreen());
                 },
               ),
               IconButton(
-                icon: Image.asset('assets/settings.png'), // Path to your settings icon
+                icon: Image.asset(
+                    'assets/settings.png'), // Path to your settings icon
                 onPressed: () {
                   //Get.to(()=> SubscriptionScreen());
-                  Get.to(()=>PreferencesScreen());
+                  Get.to(() => PreferencesScreen());
                 },
               ),
             ],
           ),
           body: RefreshIndicator(
             onRefresh: _refreshData,
-            child:
-              checkInController.filteredUsers.isEmpty?
-                 _buildEmptyVenue(checkInController)
-
-                : _buildPopulatedVenue(context, checkInController, sendRequestController, user, blockUserController),
-
-
+            child: checkInController.filteredUsers.isEmpty
+                ? _buildEmptyVenue(checkInController)
+                : _buildPopulatedVenue(context, checkInController,
+                    sendRequestController, user, blockUserController),
           ),
         ),
       ),
@@ -139,15 +142,17 @@ class VenueHomePopulated extends StatelessWidget {
   }
 
   Widget _buildEmptyVenue(CheckInController checkInController) {
-    return ListView(
-      shrinkWrap: true,
-      children: [Column(
+    return ListView(shrinkWrap: true, children: [
+      Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0), // Adjust vertical padding as needed
+            padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 20.0), // Adjust vertical padding as needed
             child: ToggleSwitch(
               minWidth: 100.0,
-              initialLabelIndex: checkInController.currentGenderFilterIndex.value,
+              initialLabelIndex:
+                  checkInController.currentGenderFilterIndex.value,
               cornerRadius: 20.0,
               activeFgColor: Colors.black,
               inactiveBgColor: Colors.grey[200],
@@ -165,17 +170,15 @@ class VenueHomePopulated extends StatelessWidget {
               radiusStyle: true,
               onToggle: (index) {
                 print('switched to: $index');
-                String gender = ['Male', 'Female', 'Non binary', 'Everyone'][index!];
+                String gender =
+                    ['Male', 'Female', 'Non binary', 'Everyone'][index!];
                 checkInController.filterUsersByGender(gender);
                 print('Switched to: $gender');
                 checkInController.currentGenderFilterIndex.value = index;
-
-
               },
             ),
           ),
           SizedBox(height: 130),
-
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -210,20 +213,23 @@ class VenueHomePopulated extends StatelessWidget {
             ),
           ),
           SizedBox(height: 180),
-
         ],
-      ),]
-    );
+      ),
+    ]);
   }
 
-
-
-
-  Widget _buildPopulatedVenue(BuildContext context, CheckInController checkInController,
-      SendRequestController sendRequestController,  User? user, BlockUserController blockUserController) {
-    List<Map<String, String?>> items = checkInController.filteredUsers.map((checkedInUser) {
+  Widget _buildPopulatedVenue(
+      BuildContext context,
+      CheckInController checkInController,
+      SendRequestController sendRequestController,
+      User? user,
+      BlockUserController blockUserController) {
+    List<Map<String, String?>> items =
+        checkInController.filteredUsers.map((checkedInUser) {
       return {
-        'image': checkedInUser.userPictures.isNotEmpty ? checkedInUser.userPictures.first.imageUrl : null,
+        'image': checkedInUser.userPictures.isNotEmpty
+            ? checkedInUser.userPictures.first.imageUrl
+            : null,
         'title': checkedInUser.name,
         'placeId': checkedInUser.uid,
       };
@@ -235,7 +241,6 @@ class VenueHomePopulated extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
           child: ToggleSwitch(
-
             minWidth: 100.0,
             initialLabelIndex: checkInController.currentGenderFilterIndex.value,
             cornerRadius: 20.0,
@@ -255,7 +260,8 @@ class VenueHomePopulated extends StatelessWidget {
             radiusStyle: true,
             onToggle: (index) {
               print('switched to: $index');
-              String gender = ['Male', 'Female', 'Non binary', 'Everyone'][index!];
+              String gender =
+                  ['Male', 'Female', 'Non binary', 'Everyone'][index!];
               checkInController.filterUsersByGender(gender);
               print('Switched to: $gender');
               checkInController.currentGenderFilterIndex.value = index;
@@ -273,12 +279,15 @@ class VenueHomePopulated extends StatelessWidget {
         ),
         SizedBox(height: 10),
         SizedBox(
-          child: HorizontalListView(items: items,),
+          child: HorizontalListView(
+            items: items,
+          ),
           height: 100,
         ),
         Expanded(
           child: Obx(() {
-            print('Building ListView with ${checkInController.filteredUsers.length} users');
+            print(
+                'Building ListView with ${checkInController.filteredUsers.length} users');
             return ListView.builder(
               itemCount: checkInController.filteredUsers.length,
               itemBuilder: (context, index) {
@@ -296,7 +305,7 @@ class VenueHomePopulated extends StatelessWidget {
                   checkedInUser.uid, // Pass user UID for sending request
                   sendRequestController, // Pass the controller to handle the request
                   blockUserController, // Pass the controller to handle blocking
-                  user?.uid,// Pass the controller to handle the request
+                  user?.uid, // Pass the controller to handle the request
                 );
               },
             );
@@ -306,10 +315,14 @@ class VenueHomePopulated extends StatelessWidget {
     );
   }
 
-
-
-
-  Widget buildProfileCard(List<String> imageUrls, String name, int age, String receiverUid, SendRequestController sendRequestController, BlockUserController blockUserController, String? senderUid) {
+  Widget buildProfileCard(
+      List<String> imageUrls,
+      String name,
+      int age,
+      String receiverUid,
+      SendRequestController sendRequestController,
+      BlockUserController blockUserController,
+      String? senderUid) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: ProfileCard(
@@ -323,7 +336,8 @@ class VenueHomePopulated extends StatelessWidget {
           if (senderUid != null) {
             print('Sender UID: $senderUid');
             print('Receiver UID: $receiverUid');
-            final blockUserModel = BlockUserModel(userUID: senderUid, blockUID: receiverUid);
+            final blockUserModel =
+                BlockUserModel(userUID: senderUid, blockUID: receiverUid);
             await blockUserController.blockUser(blockUserModel);
           } else {
             print('User UID is null');
@@ -333,14 +347,14 @@ class VenueHomePopulated extends StatelessWidget {
           //Get.back();
           print('Report for $name');
         },
-        onHeartPressed: () async{
+        onHeartPressed: () async {
           print('Heart pressed for $name');
           if (senderUid != null) {
             print('Sender UID: $senderUid');
             print('Receiver UID: $receiverUid');
-            final request = SendRequestModel(senderUid: senderUid, receiverUid: receiverUid);
+            final request = SendRequestModel(
+                senderUid: senderUid, receiverUid: receiverUid);
             await sendRequestController.sendRequest(request);
-
           } else {
             print('Sender UID is null');
           }
@@ -348,6 +362,4 @@ class VenueHomePopulated extends StatelessWidget {
       ),
     );
   }
-
-
 }
