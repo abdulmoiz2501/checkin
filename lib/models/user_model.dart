@@ -33,6 +33,7 @@ class UserPicture {
     };
   }
 }
+
 class UserModel {
   final int id;
   final String uid;
@@ -47,11 +48,13 @@ class UserModel {
   final String email;
   final int age;
   final DateTime createdAt;
+  final bool showSexualOrientation;
   final DateTime updatedAt;
   final List<UserPicture> userPictures;
   final bool? subscribed;
 
   UserModel({
+    required this.showSexualOrientation,
     required this.id,
     required this.uid,
     required this.name,
@@ -80,6 +83,7 @@ class UserModel {
       gender: json['gender'],
       sex: json['sex'],
       activeStatus: json['activeStatus'],
+      showSexualOrientation: json['showSexualOrientation'],
       packageId: json['packageId'],
       date: DateTime.parse(json['date']),
       email: json['email'],

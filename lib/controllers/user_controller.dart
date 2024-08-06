@@ -5,7 +5,7 @@ import '../constants/api_constant.dart';
 import '../models/user_model.dart';
 
 class UserController extends GetxController {
-  var user =  UserModel(
+  var user = UserModel(
     id: 0,
     uid: '',
     name: '',
@@ -16,6 +16,7 @@ class UserController extends GetxController {
     activeStatus: '',
     packageId: 0,
     date: DateTime.now(),
+    showSexualOrientation: false,
     email: '',
     age: 0,
     createdAt: DateTime.now(),
@@ -29,10 +30,11 @@ class UserController extends GetxController {
   Future<void> fetchUser(String uid) async {
     try {
       isLoading(true);
-      final response = await http.get(
-          Uri.parse('$api/api/v1/users/getUsers?uid=$uid'));
+      final response =
+          await http.get(Uri.parse('$api/api/v1/users/getUsers?uid=$uid'));
 
-      print('Response status of USER CONTROLLER FETCH USER ON LOGIN/SIGNUP: ${response.statusCode}');
+      print(
+          'Response status of USER CONTROLLER FETCH USER ON LOGIN/SIGNUP: ${response.statusCode}');
       print('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
@@ -55,4 +57,3 @@ class UserController extends GetxController {
     }
   }
 }
-

@@ -1,5 +1,7 @@
 import 'package:checkin/View/NewConnection.dart';
 import 'package:checkin/View/SubscriptionScreen.dart';
+import 'package:checkin/models/user_model.dart';
+import 'package:checkin/models/view_profile_model.dart';
 import 'package:checkin/utils/device/device.dart';
 import 'package:checkin/widgets/horizontal_view_list.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -307,6 +309,7 @@ class VenueHomePopulated extends StatelessWidget {
                   checkedInUser.uid, // Pass user UID for sending request
                   sendRequestController, // Pass the controller to handle the request
                   blockUserController, // Pass the controller to handle blocking
+                  checkedInUser,
                   user?.uid, // Pass the controller to handle the request
                 );
               },
@@ -324,6 +327,7 @@ class VenueHomePopulated extends StatelessWidget {
       String receiverUid,
       SendRequestController sendRequestController,
       BlockUserController blockUserController,
+      UserModel user,
       String? senderUid) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -333,6 +337,7 @@ class VenueHomePopulated extends StatelessWidget {
         age: age,
         senderUid: senderUid!,
         receiverUid: receiverUid,
+        user: user,
         onBlockPressed: () async {
           print('Block pressed for $name');
           if (senderUid != null) {

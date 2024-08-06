@@ -1,5 +1,5 @@
 import 'package:checkin/constants/colors.dart';
-import 'package:checkin/utils/popups/loaders.dart';
+import 'package:checkin/models/user_model.dart';
 import 'package:checkin/widgets/user_detail_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,6 +17,7 @@ class ProfileCard extends StatefulWidget {
   final VoidCallback onBlockPressed;
   final VoidCallback onHeartPressed;
   final VoidCallback onReportPressed;
+  final UserModel user;
 
   ProfileCard({
     required this.imageUrls,
@@ -27,6 +28,7 @@ class ProfileCard extends StatefulWidget {
     required this.onBlockPressed,
     required this.onHeartPressed,
     required this.onReportPressed,
+    required this.user,
   });
 
   @override
@@ -80,7 +82,8 @@ class _ProfileCardState extends State<ProfileCard> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           ListTile(
-                            leading: const Icon(Icons.block, color: Colors.white),
+                            leading:
+                                const Icon(Icons.block, color: Colors.white),
                             title: const Text(
                               'Block',
                               style: TextStyle(
@@ -140,7 +143,8 @@ class _ProfileCardState extends State<ProfileCard> {
     Overlay.of(context)!.insert(_popupDialog!);
   }
 
-  void _showReportBottomSheet(BuildContext context, String name, String userUID, String reportUserUID) {
+  void _showReportBottomSheet(
+      BuildContext context, String name, String userUID, String reportUserUID) {
     showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
@@ -150,14 +154,16 @@ class _ProfileCardState extends State<ProfileCard> {
         ),
       ),
       builder: (BuildContext context) {
-        return ReportOptionsModal(name: name, userUID: userUID, reportUserUID: reportUserUID);
+        return ReportOptionsModal(
+            name: name, userUID: userUID, reportUserUID: reportUserUID);
       },
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    print('/////////////This is the length of the imageUrls: ${widget.imageUrls.length} ////////////  ');
+    print(
+        '/////////////This is the length of the imageUrls: ${widget.imageUrls.length} ////////////  ');
     return WillPopScope(
       onWillPop: () async {
         if (_popupDialog != null) {
@@ -179,42 +185,46 @@ class _ProfileCardState extends State<ProfileCard> {
                   height: 300, // Set a specific height for the image
                   width: double.infinity,
                   child: PageView.builder(
-                    itemCount: widget.imageUrls.length+1,
+                    itemCount: widget.imageUrls.length + 1,
                     onPageChanged: (int page) {
                       setState(() {
                         _currentPage = page;
                       });
                     },
                     itemBuilder: (context, index) {
-                      if(index==0)
-                      {
-                      return Image.network(
-                      widget.imageUrls[index],
-                      fit: BoxFit.cover,
-                      );
+                      if (index == 0) {
+                        return Image.network(
+                          widget.imageUrls[index],
+                          fit: BoxFit.cover,
+                        );
                       }
                       if (index == 1) {
                         // SHOW CARD HERE
                         return UserCard(
-                          imageUrl: 'https://example.com/profile.jpg',
-                          name: 'Amelia',
-                          age: 36,
-                          gender: 'Female',
-                          height: '175 cm',
-                          sexualPreference: 'Straight',
-                          showSexualOrientation: true,
-                          description: 'It\'s hard to meet people these days, glad this app exists! Let\'s chat!!',
-                          checkinGoals: ['Friends', 'Dates', 'Networking', 'Travel', 'Love', 'Casual'],
+                          imageUrl: widget.imageUrls.first,
+                          name: widget.user.name,
+                          age: widget.user.age,
+                          gender: widget.user.gender,
+                          height: '129',
+                          sexualPreference: widget.user.sex,
+                          showSexualOrientation:
+                              widget.user.showSexualOrientation,
+                          description: widget.user.description,
+                          checkinGoals: [
+                            'Friends',
+                            'Dates',
+                            'Networking',
+                            'Travel',
+                            'Love',
+                            'Casual'
+                          ],
+                        );
+                      } else {
+                        return Image.network(
+                          widget.imageUrls[index - 1],
+                          fit: BoxFit.cover,
                         );
                       }
-
-                      else
-                        {
-                          return Image.network(
-                            widget.imageUrls[index-1],
-                            fit: BoxFit.cover,
-                          );
-                        }
                     },
                   ),
                 ),
@@ -227,10 +237,12 @@ class _ProfileCardState extends State<ProfileCard> {
                     margin: EdgeInsets.all(6.0), // Add margin to the sides
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: List.generate(widget.imageUrls.length+1, (index) {
+                      children:
+                          List.generate(widget.imageUrls.length + 1, (index) {
                         return Container(
                           width: (MediaQuery.of(context).size.width - 52) /
-                              (widget.imageUrls.length+1) - 4, // Adjust width and add spacing
+                                  (widget.imageUrls.length + 1) -
+                              4, // Adjust width and add spacing
                           margin: EdgeInsets.symmetric(
                               horizontal: 3.0), // Add space between segments
                           decoration: BoxDecoration(
@@ -297,44 +309,42 @@ class _ProfileCardState extends State<ProfileCard> {
                           ),
                         ),
                         child: IconButton(
-                          icon: Icon(!showSendTick? Icons.favorite : Icons.done, color: Colors.white),
+                          icon: Icon(
+                              !showSendTick ? Icons.favorite : Icons.done,
+                              color: Colors.white),
                           onPressed: () {
-                            if(!showSendTick)
-                              {
-                                widget.onHeartPressed();
-                                // Show the popup
-                                showCustomPopup(
-                                  context: context,
-                                  headingText: 'Request sent!',
-                                  subText:
-                                  'We\'ve informed the other user of your interest. You\'ll be notified once they accept your request. Remember to follow the guidelines.',
-                                  buttonText: 'Continue',
-                                  belowButtonText: 'Don\'t show again',
-                                  onButtonPressed: () {
-                                    setState(() {
-                                      showSendTick = true;
-                                    });
-                                    // Handle continue button press
-                                    //Get.back();
-                                  },
-                                  onBelowButtonPressed: () {
-                                    /// Handle "Don't show again" button press
-                                    // Get.back();
-                                    print("Don't show again tapped");
-                                  },
-                                  onGuidelinesPressed: () {
-                                    ///TODO route to guidelines
-                                  },
-                                  showGuidelines: true,
-                                );
-                              }
-                            else
-                              {
-                                Get.snackbar("Already Sent", "You have already sent a request to this user");
-                                //VoidLoaders.errorSnackBar(title: 'Already Sent' , message: 'You have already sent a request to this user');
-                              }
-
-
+                            if (!showSendTick) {
+                              widget.onHeartPressed();
+                              // Show the popup
+                              showCustomPopup(
+                                context: context,
+                                headingText: 'Request sent!',
+                                subText:
+                                    'We\'ve informed the other user of your interest. You\'ll be notified once they accept your request. Remember to follow the guidelines.',
+                                buttonText: 'Continue',
+                                belowButtonText: 'Don\'t show again',
+                                onButtonPressed: () {
+                                  setState(() {
+                                    showSendTick = true;
+                                  });
+                                  // Handle continue button press
+                                  //Get.back();
+                                },
+                                onBelowButtonPressed: () {
+                                  /// Handle "Don't show again" button press
+                                  // Get.back();
+                                  print("Don't show again tapped");
+                                },
+                                onGuidelinesPressed: () {
+                                  ///TODO route to guidelines
+                                },
+                                showGuidelines: true,
+                              );
+                            } else {
+                              Get.snackbar("Already Sent",
+                                  "You have already sent a request to this user");
+                              //VoidLoaders.errorSnackBar(title: 'Already Sent' , message: 'You have already sent a request to this user');
+                            }
                           },
                         ),
                       ),
