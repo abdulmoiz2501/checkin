@@ -2,8 +2,6 @@
 
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
 
 import '../constants/api_constant.dart';
 import '../models/edit_profile_model.dart';
@@ -11,24 +9,27 @@ import '../models/edit_profile_model.dart';
 class EditProfileController extends GetxController {
   var isLoading = false.obs;
   final RxBool showSexualOrientation = false.obs;
+  final RxList<String> checkinGoals = <String>[].obs;
 
-  Future<void> updateProfile(String userId, EditProfileModel profile) async {
+  Future<void> updateProfile(String userId, EditProfileModel profile,
+      List<String> checkinGoals) async {
     isLoading.value = true;
-    final url =
-        '$api/api/v1/user/editProfile?userId=$userId';
+    final url = '$api/api/v1/user/editProfile?userId=$userId';
 
     var request = http.MultipartRequest('PUT', Uri.parse(url));
     request.fields.addAll(profile.toJson());
-    request.fields['showSexualOrientation'] = showSexualOrientation.value.toString();
+    request.fields['showSexualOrientation'] =
+        showSexualOrientation.value.toString();
+    request.fields['checkInGoals'] = checkinGoals.join(',');
 
-    // Helper function to download and save network image to file
-    Future<File> _downloadFile(String url, String filename) async {
-      final directory = await getApplicationDocumentsDirectory();
-      final filePath = '${directory.path}/$filename';
-      final response = await http.get(Uri.parse(url));
-      final file = File(filePath);
-      return file.writeAsBytes(response.bodyBytes);
-    }
+    // // Helper function to download and save network image to file
+    // Future<File> _downloadFile(String url, String filename) async {
+    //   final directory = await getApplicationDocumentsDirectory();
+    //   final filePath = '${directory.path}/$filename';
+    //   final response = await http.get(Uri.parse(url));
+    //   final file = File(filePath);
+    //   return file.writeAsBytes(response.bodyBytes);
+    // }
 
     if (profile.localImages != null) {
       for (var imagePath in profile.localImages!) {

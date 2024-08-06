@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:checkin/controllers/edit_profile_controller.dart';
 import 'package:checkin/models/edit_profile_model.dart';
+import 'package:checkin/widgets/multiple_Selectable_Buttons.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -52,6 +53,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController heightController = TextEditingController();
   final EditProfileController editProfileController =
       Get.put(EditProfileController());
+  List<String> checkinGoals = [];
 
   List<String> _getImagePaths() {
     return _images
@@ -76,6 +78,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     selectedOption.value = controller.userProfile.value!.sex;
     descriptionController.text = controller.userProfile.value!.description;
     heightController.text = controller.userProfile.value!.height.toString();
+    editProfileController.checkinGoals.value =
+        controller.userProfile.value!.checkInGoals!.isEmpty
+            ? []
+            : controller.userProfile.value!.checkInGoals!;
 
     editProfileController.showSexualOrientation.value =
         controller.userProfile.value!.showSexualOrientation;
@@ -411,23 +417,25 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 7.0),
-              child: Obx(
-                () => SelectableButtonGroup(
-                  options: [
-                    'Friends',
-                    'Networking',
-                    'Dates',
-                    'Casual',
-                    'Love',
-                    'Food',
-                    'Explore city',
-                    'Parties',
-                    'Pub crawls',
-                    'Drinking buddies'
-                  ],
-                  initialSelected: selectedOption.value,
-                  onSelected: (value) {},
-                ),
+              child: MultipleSelectableButtons(
+                options: [
+                  'Friends',
+                  'Networking',
+                  'Dates',
+                  'Casual',
+                  'Love',
+                  'Food',
+                  'Explore city',
+                  'Parties',
+                  'Pub crawls',
+                  'Drinking buddies'
+                ],
+                initialSelected: editProfileController.checkinGoals,
+                onSelected: (value) {
+                  // editProfileController.checkinGoals.value = value;
+                  print('this is the edit profile checkin goals ${value}');
+                  checkinGoals = value;
+                },
               ),
             ),
             SizedBox(height: 10.0),
@@ -544,7 +552,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         _serverImageUrls.isNotEmpty ? _serverImageUrls : null,
                   );
                   await editProfileController.updateProfile(
-                      FirebaseAuth.instance.currentUser!.uid, profile);
+                    FirebaseAuth.instance.currentUser!.uid,
+                    profile,
+                    checkinGoals,
+                  );
 
                   // if (_images.where((image) => image != null).length == 4) {
                   //   final EditProfileModel profile = EditProfileModel(

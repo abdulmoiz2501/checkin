@@ -32,8 +32,9 @@ class UserM {
   final bool subscribed;
   final bool showSexualOrientation;
   final List<UserPicture> userPictures;
+  final List<String>? checkInGoals;
 
-  UserM( {
+  UserM({
     required this.showSexualOrientation,
     required this.id,
     required this.uid,
@@ -50,15 +51,17 @@ class UserM {
     required this.age,
     required this.subscribed,
     required this.userPictures,
+    this.checkInGoals,
   });
 
   factory UserM.fromJson(Map<String, dynamic> json) {
     var list = json['UserPictures'] as List;
     print("????????????????");
     print(json);
-    double? h = json['height'] !=null ?double.parse(json['height'].toString()) : null;
+    double? h =
+        json['height'] != null ? double.parse(json['height'].toString()) : null;
     List<UserPicture> userPictureList =
-    list.map((i) => UserPicture.fromJson(i)).toList();
+        list.map((i) => UserPicture.fromJson(i)).toList();
     print('id: ${json['id'].runtimeType}');
     print('uid: ${json['UId'].runtimeType}');
     print('name: ${json['name'].runtimeType}');
@@ -91,6 +94,9 @@ class UserM {
       age: json['age'],
       subscribed: json['subscribed'],
       userPictures: userPictureList,
+      checkInGoals: json['CheckInGoals'] != null
+          ? List<String>.from(json['CheckInGoals'])
+          : null,
     );
   }
 }
@@ -112,11 +118,11 @@ class UserPicture {
 
   factory UserPicture.fromJson(Map<String, dynamic> json) {
     return UserPicture(
-        id: json['id'],
-        userId: json['userId'],
-        imageUrl: json['imageUrl'],
-        createdAt: json['createdAt'],
-        updatedAt: json['updatedAt'],
-        );
-    }
+      id: json['id'],
+      userId: json['userId'],
+      imageUrl: json['imageUrl'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
+    );
+  }
 }
