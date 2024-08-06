@@ -138,7 +138,7 @@ class UserCard extends StatelessWidget {
   final String sexualPreference;
   final bool showSexualOrientation;
   final String description;
-  final List<String> checkinGoals;
+  final List<String>? checkinGoals;
 
   UserCard({
     required this.imageUrl,
@@ -163,7 +163,6 @@ class UserCard extends StatelessWidget {
         children: [
           Row(
             children: [
-
               CircleAvatar(
                 backgroundImage: NetworkImage(imageUrl),
                 radius: 35.0,
@@ -173,7 +172,6 @@ class UserCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 20.0),
-
                   Row(
                     children: [
                       Text(
@@ -198,8 +196,8 @@ class UserCard extends StatelessWidget {
                         gender.toLowerCase() == 'female'
                             ? 'assets/female_white.png'
                             : gender.toLowerCase() == 'male'
-                            ? 'assets/male_white.png'
-                            : 'assets/binary_white.png',
+                                ? 'assets/male_white.png'
+                                : 'assets/binary_white.png',
                         height: 15,
                         width: 15,
                       ),
@@ -264,27 +262,28 @@ class UserCard extends StatelessWidget {
             ),
           ),
           SizedBox(height: 10.0),
-          Wrap(
-            spacing: 10.0,
-            runSpacing: 10.0,
-            children: checkinGoals.map((goal) {
-              return Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white),
-                  borderRadius: BorderRadius.circular(20.0),
-                  color: Color(0xFF21262D),
-                ),
-                padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                child: Text(
-                  goal,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'SFProDisplay',
+          if (checkinGoals != null)
+            Wrap(
+              spacing: 10.0,
+              runSpacing: 10.0,
+              children: checkinGoals!.map((goal) {
+                return Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.white),
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: Color(0xFF21262D),
                   ),
-                ),
-              );
-            }).toList(),
-          ),
+                  padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                  child: Text(
+                    goal,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'SFProDisplay',
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
         ],
       ),
     );

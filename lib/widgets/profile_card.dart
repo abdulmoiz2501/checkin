@@ -201,24 +201,20 @@ class _ProfileCardState extends State<ProfileCard> {
                       if (index == 1) {
                         // SHOW CARD HERE
                         return UserCard(
-                          imageUrl: widget.imageUrls.first,
-                          name: widget.user.name,
-                          age: widget.user.age,
-                          gender: widget.user.gender,
-                          height: '129',
-                          sexualPreference: widget.user.sex,
-                          showSexualOrientation:
-                              widget.user.showSexualOrientation,
-                          description: widget.user.description,
-                          checkinGoals: [
-                            'Friends',
-                            'Dates',
-                            'Networking',
-                            'Travel',
-                            'Love',
-                            'Casual'
-                          ],
-                        );
+                            imageUrl: widget.imageUrls.first,
+                            name: widget.user.name,
+                            age: widget.user.age,
+                            gender: widget.user.gender,
+                            height: '129',
+                            sexualPreference: widget.user.sex,
+                            showSexualOrientation:
+                                widget.user.showSexualOrientation,
+                            description: widget.user.description,
+                            checkinGoals: widget.user.checkInGoals == null
+                                ? ['No Check-In Goals']
+                                : widget.user.checkInGoals!.isNotEmpty
+                                    ? widget.user.checkInGoals
+                                    : ['No Check-In Goals']);
                       } else {
                         return Image.network(
                           widget.imageUrls[index - 1],
