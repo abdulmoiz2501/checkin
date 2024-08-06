@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../constants/api_constant.dart';
 import '../models/check_out_model.dart';
 import '../widgets/bottom_bav_bar.dart';
 
@@ -13,7 +14,7 @@ class CheckOutController extends GetxController {
   Future<void> checkOutUser(CheckOutRequest request) async {
     isLoading(true);
 
-    final url = 'https://check-in-apis-e4xj.vercel.app/api/v1/venues/checkout';
+    final url = '$api/api/v1/venues/checkout';
     final headers = {'Content-Type': 'application/json'};
 
     try {

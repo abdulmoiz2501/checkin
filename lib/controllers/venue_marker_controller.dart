@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../constants/api_constant.dart';
 import '../models/venue_marker_model.dart';
 
 class VenueMarkerController extends GetxController {
@@ -15,7 +16,7 @@ class VenueMarkerController extends GetxController {
   Future<void> checkPlaceIds(List<String> placeIds) async {
     isLoading(true);
     final url = Uri.parse(
-        'https://check-in-apis-e4xj.vercel.app/api/v1/venues/getVenues?placeid=${placeIds.join(",")}&userId=${FirebaseAuth.instance.currentUser?.uid}');
+        '$api/api/v1/venues/getVenues?placeid=${placeIds.join(",")}&userId=${FirebaseAuth.instance.currentUser?.uid}');
     try {
       final response = await http.get(url);
 

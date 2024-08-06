@@ -30,9 +30,11 @@ class UserM {
   final double? height;
   final int age;
   final bool subscribed;
+  final bool showSexualOrientation;
   final List<UserPicture> userPictures;
 
-  UserM({
+  UserM( {
+    required this.showSexualOrientation,
     required this.id,
     required this.uid,
     required this.name,
@@ -74,6 +76,7 @@ class UserM {
 
     return UserM(
       id: json['id'],
+      showSexualOrientation: json['showSexualOrientation'],
       uid: json['UId'],
       name: json['name'],
       number: json['number'],

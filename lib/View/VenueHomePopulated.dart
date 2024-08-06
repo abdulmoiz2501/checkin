@@ -121,6 +121,8 @@ class VenueHomePopulated extends StatelessWidget {
               ),
               IconButton(
                 icon: Image.asset(
+                    height: 35,
+                    width: 35,
                     'assets/settings.png'), // Path to your settings icon
                 onPressed: () {
                   //Get.to(()=> SubscriptionScreen());

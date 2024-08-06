@@ -4,13 +4,15 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../constants/api_constant.dart';
+
 class SettingsController extends GetxController {
   var isLoading = false.obs;
 
   Future<void> deleteAccount(String uid) async {
     isLoading.value = true;
     final url =
-        'https://check-in-apis-e4xj.vercel.app/api/v1/user/deleteAccount?uid=$uid';
+        '$api/api/v1/user/deleteAccount?uid=$uid';
 
     try {
       final response = await http.delete(Uri.parse(url));

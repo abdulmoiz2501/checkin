@@ -1,1 +1,1 @@
-var api = "https://check-in-production-b9fd.up.railway.app/api/v1";
+var api = "https://check-in-apis-production.up.railway.app";

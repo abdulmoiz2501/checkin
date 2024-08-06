@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../constants/api_constant.dart';
 import '../models/block_user_model.dart';
 
 class BlockUserController extends GetxController {
   Future<void> blockUser(BlockUserModel blockUserModel) async {
-    final url = 'https://check-in-apis-e4xj.vercel.app/api/v1/users/blockUser';
+    final url = '$api/api/v1/users/blockUser';
     final response = await http.post(
       Uri.parse(url),
       headers: {

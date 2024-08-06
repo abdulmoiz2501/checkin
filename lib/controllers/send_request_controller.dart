@@ -2,12 +2,13 @@
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../constants/api_constant.dart';
 import '../models/send_request_model.dart';
 import '../services/notification_sending_service.dart';
 
 class SendRequestController extends GetxController {
   Future<void> sendRequest(SendRequestModel request) async {
-    final url = 'https://check-in-apis-e4xj.vercel.app/api/v1/requests/sendRequest';
+    final url = '$api/api/v1/requests/sendRequest';
     final response = await http.post(
       Uri.parse(url),
       headers: {

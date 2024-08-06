@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../constants/api_constant.dart';
 import '../models/payment_model.dart';
 
 class PaymentController extends GetxController {
@@ -12,7 +13,7 @@ class PaymentController extends GetxController {
 
   Future<void> addPayment(PaymentModel payment) async {
     isLoading(true);
-    final url = 'https://check-in-apis-e4xj.vercel.app/api/v1/users/addPayment';
+    final url = '$api/api/v1/users/addPayment';
 
     try {
       final response = await http.post(

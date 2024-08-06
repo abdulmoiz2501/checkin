@@ -3,6 +3,7 @@
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../constants/api_constant.dart';
 import '../models/get_request_model.dart';
 import '../models/user_model.dart';
 
@@ -16,7 +17,7 @@ class GetRequestController extends GetxController {
     print('The value of loading is $isLoading');
     isLoading.value = true;
     recRequests.clear();
-    final uri = Uri.parse('https://check-in-apis-e4xj.vercel.app/api/v1/requests/getRequests?userId=$userId');
+    final uri = Uri.parse('$api/api/v1/requests/getRequests?userId=$userId');
     final response = await http.get(uri);
 
 

@@ -77,6 +77,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     descriptionController.text = controller.userProfile.value!.description;
     heightController.text = controller.userProfile.value!.height.toString();
 
+    editProfileController.showSexualOrientation.value =
+        controller.userProfile.value!.showSexualOrientation;
+
     //print('this is the url of the image ${controller.images.value.first}');
     return Scaffold(
       body: SingleChildScrollView(

@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../constants/api_constant.dart';
 import '../models/user_model.dart';
 
 class UserController extends GetxController {
@@ -29,7 +30,7 @@ class UserController extends GetxController {
     try {
       isLoading(true);
       final response = await http.get(
-          Uri.parse('https://check-in-apis-e4xj.vercel.app/api/v1/users/getUsers?uid=$uid'));
+          Uri.parse('$api/api/v1/users/getUsers?uid=$uid'));
 
       print('Response status of USER CONTROLLER FETCH USER ON LOGIN/SIGNUP: ${response.statusCode}');
       print('Response body: ${response.body}');

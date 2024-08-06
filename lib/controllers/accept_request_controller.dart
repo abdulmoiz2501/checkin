@@ -3,12 +3,13 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import '../constants/api_constant.dart';
 import '../services/notification_sending_service.dart';
 
 class AcceptRequestController extends GetxController {
   Future<void> acceptRequest(String userId, String senderId) async {
     try {
-      final uri = Uri.parse('https://check-in-apis-e4xj.vercel.app/api/v1/requests/acceptRequest');
+      final uri = Uri.parse('$api/api/v1/requests/acceptRequest');
       final response = await http.put(
         uri,
         headers: {

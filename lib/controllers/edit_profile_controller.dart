@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
+import '../constants/api_constant.dart';
 import '../models/edit_profile_model.dart';
 
 class EditProfileController extends GetxController {
@@ -14,11 +15,11 @@ class EditProfileController extends GetxController {
   Future<void> updateProfile(String userId, EditProfileModel profile) async {
     isLoading.value = true;
     final url =
-        'https://check-in-apis-e4xj.vercel.app/api/v1/user/editProfile?userId=$userId';
+        '$api/api/v1/user/editProfile?userId=$userId';
 
     var request = http.MultipartRequest('PUT', Uri.parse(url));
     request.fields.addAll(profile.toJson());
-    request.fields['rangeFlag'] = showSexualOrientation.value.toString();
+    request.fields['showSexualOrientation'] = showSexualOrientation.value.toString();
 
     // Helper function to download and save network image to file
     Future<File> _downloadFile(String url, String filename) async {

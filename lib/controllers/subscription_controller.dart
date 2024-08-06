@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../constants/api_constant.dart';
 import '../models/subscription_model.dart';
 
 class SubscriptionController extends GetxController {
@@ -12,7 +13,7 @@ class SubscriptionController extends GetxController {
     try {
       isLoading(true);
       final response = await http.post(
-        Uri.parse('https://check-in-apis-e4xj.vercel.app/api/v1/users/addSubscription'),
+        Uri.parse('$api/api/v1/users/addSubscription'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(subscription.toJson()),
       );

@@ -12,6 +12,7 @@ import 'package:get/get_rx/get_rx.dart';
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 
+import '../constants/api_constant.dart';
 import '../services/notification_sending_service.dart';
 
 class ChatController extends GetxController {
@@ -26,7 +27,7 @@ class ChatController extends GetxController {
     try {
       isLoading(true);
       final response = await http.get(Uri.parse(
-          'https://check-in-apis-e4xj.vercel.app/api/v1/users/getUsers?uid=$uid'));
+          '$api/api/v1/users/getUsers?uid=$uid'));
 
       print(
           'Response status of USER CONTROLLER FETCH USER ON LOGIN/SIGNUP: ${response.statusCode}');
@@ -55,7 +56,7 @@ class ChatController extends GetxController {
     try {
       isLoading(true);
       final response = await http.get(Uri.parse(
-          'https://check-in-apis-e4xj.vercel.app/api/v1/requests/getFriendList?userId=${firebaseAuth.currentUser!.uid}'));
+          '$api/api/v1/requests/getFriendList?userId=${firebaseAuth.currentUser!.uid}'));
 
       if (response.statusCode == 200) {
         var data = json.decode(response.body);

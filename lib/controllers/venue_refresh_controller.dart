@@ -2,6 +2,7 @@ import 'package:checkin/controllers/check_in_controller.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../constants/api_constant.dart';
 import '../models/check_in_model.dart';
 import '../models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -23,7 +24,7 @@ class VenueRefreshController extends GetxController {
     isLoading(true);
 
     String url =
-        'https://check-in-apis-e4xj.vercel.app/api/v1/venues/getVenues?placeid=${currentPlaceId.value}&userId=${FirebaseAuth.instance.currentUser?.uid}';
+        '$api/api/v1/venues/getVenues?placeid=${currentPlaceId.value}&userId=${FirebaseAuth.instance.currentUser?.uid}';
     if (isFirstHitDone.value) {
       url += '&ageRange=${minAge.value.toInt()}-${maxAge.value.toInt()}';
     }

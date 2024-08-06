@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../View/CheckInScreen.dart';
+import '../constants/api_constant.dart';
 import '../models/check_in_model.dart';
 
 class CheckInController extends GetxController {
@@ -26,7 +27,7 @@ class CheckInController extends GetxController {
   Future<void> checkInUser(CheckInRequest request) async {
     isLoading(true);
 
-    final url = 'https://check-in-apis-e4xj.vercel.app/api/v1/venues/checkin';
+    final url = '$api/api/v1/venues/checkin';
     final headers = {'Content-Type': 'application/json'};
     final currentUser = FirebaseAuth.instance.currentUser;
 

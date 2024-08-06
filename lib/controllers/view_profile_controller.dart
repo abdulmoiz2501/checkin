@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../constants/api_constant.dart';
 import '../models/view_profile_model.dart';
 
 class ViewProfileController extends GetxController {
@@ -18,7 +19,7 @@ class ViewProfileController extends GetxController {
   Future<void> fetchUserProfile() async {
     isLoading.value = true;
     final url =
-        'https://check-in-apis-e4xj.vercel.app/api/v1/users/getUsers?uid=${FirebaseAuth.instance.currentUser!.uid}';
+        '$api/api/v1/users/getUsers?uid=${FirebaseAuth.instance.currentUser!.uid}';
 
     try {
       print("INSIDE FETCH USER PROFILE");

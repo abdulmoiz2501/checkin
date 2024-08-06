@@ -2,11 +2,12 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../constants/api_constant.dart';
 import '../models/report_user_model.dart';
 
 class ReportUserController extends GetxController {
   Future<bool> reportUser(ReportUserModel reportUserModel) async {
-    final url = 'https://check-in-apis-e4xj.vercel.app/api/v1/users/reportUser';
+    final url = '$api/api/v1/users/reportUser';
     try {
       final response = await http.post(
         Uri.parse(url),

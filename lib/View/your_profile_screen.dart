@@ -251,7 +251,7 @@ class YourProfileScreen extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        'Not shown on profile',
+                        user.showSexualOrientation?'Shown on Profile':  'Not shown on profile',
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w400,

@@ -7,6 +7,7 @@ import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
+import '../constants/api_constant.dart';
 import '../models/user_model.dart';
 import '../utils/popups/loaders.dart';
 
@@ -22,7 +23,7 @@ class UserAuthController extends GetxController {
       print('Phone: $phoneNumber.va');
 
       final uri = Uri.parse(
-          'https://check-in-apis-e4xj.vercel.app/api/v1/users/signup');
+          '$api/api/v1/users/signup');
       final request = http.MultipartRequest('POST', uri);
       request.fields['UId'] = map['uid'];
       request.fields['name'] = map['name'];
@@ -73,7 +74,7 @@ class UserAuthController extends GetxController {
     try {
       print('Signing in user with UID: $uid');
       final uri = Uri.parse(
-          'https://check-in-apis-e4xj.vercel.app/api/v1/users/getUsers?uid=$uid');
+          '$api/api/v1/users/getUsers?uid=$uid');
       final response = await http.get(uri);
       print("/////////////////////////////////////");
       print('THIS IS THE RESPONSE OF SIGN IN USER IN USER AUTH CONTROLLER ${response.body}');

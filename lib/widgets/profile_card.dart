@@ -1,5 +1,6 @@
 import 'package:checkin/constants/colors.dart';
 import 'package:checkin/utils/popups/loaders.dart';
+import 'package:checkin/widgets/user_detail_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -156,6 +157,7 @@ class _ProfileCardState extends State<ProfileCard> {
 
   @override
   Widget build(BuildContext context) {
+    print('/////////////This is the length of the imageUrls: ${widget.imageUrls.length} ////////////  ');
     return WillPopScope(
       onWillPop: () async {
         if (_popupDialog != null) {
@@ -177,17 +179,42 @@ class _ProfileCardState extends State<ProfileCard> {
                   height: 300, // Set a specific height for the image
                   width: double.infinity,
                   child: PageView.builder(
-                    itemCount: widget.imageUrls.length,
+                    itemCount: widget.imageUrls.length+1,
                     onPageChanged: (int page) {
                       setState(() {
                         _currentPage = page;
                       });
                     },
                     itemBuilder: (context, index) {
+                      if(index==0)
+                      {
                       return Image.network(
-                        widget.imageUrls[index],
-                        fit: BoxFit.cover,
+                      widget.imageUrls[index],
+                      fit: BoxFit.cover,
                       );
+                      }
+                      if (index == 1) {
+                        // SHOW CARD HERE
+                        return UserCard(
+                          imageUrl: 'https://example.com/profile.jpg',
+                          name: 'Amelia',
+                          age: 36,
+                          gender: 'Female',
+                          height: '175 cm',
+                          sexualPreference: 'Straight',
+                          showSexualOrientation: true,
+                          description: 'It\'s hard to meet people these days, glad this app exists! Let\'s chat!!',
+                          checkinGoals: ['Friends', 'Dates', 'Networking', 'Travel', 'Love', 'Casual'],
+                        );
+                      }
+
+                      else
+                        {
+                          return Image.network(
+                            widget.imageUrls[index-1],
+                            fit: BoxFit.cover,
+                          );
+                        }
                     },
                   ),
                 ),
@@ -200,11 +227,10 @@ class _ProfileCardState extends State<ProfileCard> {
                     margin: EdgeInsets.all(6.0), // Add margin to the sides
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: List.generate(widget.imageUrls.length, (index) {
+                      children: List.generate(widget.imageUrls.length+1, (index) {
                         return Container(
                           width: (MediaQuery.of(context).size.width - 52) /
-                                  widget.imageUrls.length -
-                              4, // Adjust width and add spacing
+                              (widget.imageUrls.length+1) - 4, // Adjust width and add spacing
                           margin: EdgeInsets.symmetric(
                               horizontal: 3.0), // Add space between segments
                           decoration: BoxDecoration(

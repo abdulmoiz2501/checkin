@@ -221,7 +221,8 @@ class PreferencesScreen extends StatelessWidget {
                     print(venueRefreshController.checkinGoals);
                     if (venueRefreshController.isLoading.value == false) {
                       venueRefreshController.isFirstHitDone.value = true;
-                      await venueRefreshController.fetchVenueData();
+                      await venueRefreshController.fetchVenueData().whenComplete(
+                            () => Get.back());
                     }
                   },
                   style: ElevatedButton.styleFrom(

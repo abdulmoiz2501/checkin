@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../constants/api_constant.dart';
+
 class VenueDetailsController extends GetxController {
   var isLoading = true.obs;
   var totalPeopleCheckedIn = 0.obs;
@@ -12,7 +14,7 @@ class VenueDetailsController extends GetxController {
   Future<void> fetchVenueDetails(String placeId) async {
     isLoading(true);
     try {
-      final url = Uri.parse('https://check-in-apis-e4xj.vercel.app/api/v1/venues/getVenues?placeid=$placeId&userId=${user!.uid}');
+      final url = Uri.parse('$api/api/v1/venues/getVenues?placeid=$placeId&userId=${user!.uid}');
       print('Request URL: $url');
       final response = await http.get(url);
 
