@@ -156,30 +156,36 @@ class UserCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Color(0xFF21262D),
+      //color: Colors.white,
       padding: EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
+
               CircleAvatar(
                 backgroundImage: NetworkImage(imageUrl),
-                radius: 30.0,
+                radius: 35.0,
               ),
               SizedBox(width: 10.0),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    name,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'SFProDisplay',
-                      fontSize: 18.0,
-                    ),
-                  ),
+                  SizedBox(height: 20.0),
+
                   Row(
                     children: [
+                      Text(
+                        name,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'SFProDisplay',
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(width: 10.0),
                       Text(
                         age.toString(),
                         style: TextStyle(
@@ -190,12 +196,12 @@ class UserCard extends StatelessWidget {
                       SizedBox(width: 5.0),
                       Image.asset(
                         gender.toLowerCase() == 'female'
-                            ? 'assets/female.png'
+                            ? 'assets/female_white.png'
                             : gender.toLowerCase() == 'male'
-                            ? 'assets/male.png'
-                            : 'assets/binary.png',
-                        height: 12,
-                        width: 12,
+                            ? 'assets/male_white.png'
+                            : 'assets/binary_white.png',
+                        height: 15,
+                        width: 15,
                       ),
                       SizedBox(width: 5.0),
                       Text(
@@ -207,21 +213,26 @@ class UserCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Text(
-                    'Height: $height',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'SFProDisplay',
-                    ),
-                  ),
-                  if (showSexualOrientation)
-                    Text(
-                      sexualPreference,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'SFProDisplay',
+                  Row(
+                    children: [
+                      Text(
+                        'Height: $height cm',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontFamily: 'SFProDisplay',
+                        ),
                       ),
-                    ),
+                      Text(' | ', style: TextStyle(color: Colors.grey)),
+                      if (showSexualOrientation)
+                        Text(
+                          sexualPreference,
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontFamily: 'SFProDisplay',
+                          ),
+                        ),
+                    ],
+                  )
                 ],
               ),
             ],
@@ -232,17 +243,19 @@ class UserCard extends StatelessWidget {
             style: TextStyle(
               color: Colors.white,
               fontFamily: 'SFProDisplay',
+              fontSize: 12.0,
             ),
           ),
+          SizedBox(height: 5.0),
           Text(
-            description,
+            '"  $description  "',
             style: TextStyle(
               color: Colors.white,
               fontFamily: 'SFProDisplay',
               fontStyle: FontStyle.italic,
             ),
           ),
-          SizedBox(height: 10.0),
+          SizedBox(height: 20.0),
           Text(
             'Checkin Goals',
             style: TextStyle(
@@ -250,8 +263,10 @@ class UserCard extends StatelessWidget {
               fontFamily: 'SFProDisplay',
             ),
           ),
+          SizedBox(height: 10.0),
           Wrap(
-            spacing: 5.0,
+            spacing: 10.0,
+            runSpacing: 10.0,
             children: checkinGoals.map((goal) {
               return Container(
                 decoration: BoxDecoration(

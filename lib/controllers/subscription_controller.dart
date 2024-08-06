@@ -18,7 +18,7 @@ class SubscriptionController extends GetxController {
         body: json.encode(subscription.toJson()),
       );
       print("RESPONSE BODY OF ADD SUBSCRIPTION API ${response.body}");
-      print("RESPONSE CODE OD ADD SUBSCRIPTION API ${response.statusCode}");
+      print("RESPONSE CODE OF ADD SUBSCRIPTION API ${response.statusCode}");
       if (response.statusCode == 200 || response.statusCode == 201) {
         var data = json.decode(response.body);
         if (data['status'] == true || data['status'] == "true") {
