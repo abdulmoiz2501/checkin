@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:checkin/widgets/progress_indicator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -29,14 +31,30 @@ class _MapWidgetState extends State<MapWidget> {
   final VenueMarkerController venueMarkerController = Get.put(VenueMarkerController());
   final UserController userController = Get.find();
 
+  Timer? _locationUpdateTimer;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializeData();
+
+
+
+      _locationUpdateTimer = Timer.periodic(Duration(minutes: 2), (timer) async{
+        print("Timer triggered for location update");
+        await _initializeData();
+      });
+
     });
   }
+
+  @override
+  void dispose() {
+    _locationUpdateTimer?.cancel(); // Cancel the timer when the widget is disposed
+    super.dispose();
+  }
+
 
   Future<void> _initializeData() async {
     String radius = '250'; // 500 meter km radius
@@ -153,8 +171,25 @@ class _MapWidgetState extends State<MapWidget> {
     return LatLng(position.latitude, position.longitude);
   }
 
+  Future<void> _updateLocationAndVenues() async {
+    LatLng userLocation = await _getUserLocation();
+    setState(() {
+      _initialPosition = userLocation;
+      _userCircle = Circle(
+        circleId: CircleId('user_radius'),
+        center: userLocation,
+        radius: _userCircle?.radius ?? 250,
+        fillColor: Colors.orange.withOpacity(0.1),
+        strokeColor: Colors.orange.withOpacity(0.5),
+        strokeWidth: 1,
+      );
+    });
+    await _fetchAndDisplayVenues(userLocation);
+  }
+
   @override
   Widget build(BuildContext context) {
+    print('Building map widget');
     return _initialPosition == null
         ? Center(child: CustomCircularProgressIndicator())
         : Stack(
