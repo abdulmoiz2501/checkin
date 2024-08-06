@@ -45,7 +45,11 @@ class _ChatscreenState extends State<Chatscreen> {
           } else if (snapshot.hasError) {
             return const Center(child: Text('Error loading chats'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Column(children: [
+            return const Center(child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+
               const Text(
                 "Looks like there are no chats for now.",
                 textAlign: TextAlign.center,

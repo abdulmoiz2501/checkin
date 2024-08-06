@@ -8,7 +8,7 @@ class SubscriptionCard extends StatelessWidget {
   ///fff
   final String price;
   final Color textColor;
-  //
+
   final Color backgroundColor;
   final Color outlineColor;
   final String asset;
