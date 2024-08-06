@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 class MultipleSelectableButtons extends StatefulWidget {
   final List<String> options;
   final ValueChanged<List<String>> onSelected;
-  final List<String> initialSelected;
+  final List<String>? initialSelected;
+  final bool tappable;
 
   MultipleSelectableButtons({
     required this.options,
     required this.onSelected,
     this.initialSelected = const [],
+    this.tappable = true,
   });
 
   @override
@@ -22,7 +24,8 @@ class _MultipleSelectableButtonsState extends State<MultipleSelectableButtons> {
   @override
   void initState() {
     super.initState();
-    selectedOptions = widget.initialSelected;
+    selectedOptions =
+        widget.initialSelected != null ? widget.initialSelected! : [];
   }
 
   @override
@@ -35,13 +38,15 @@ class _MultipleSelectableButtonsState extends State<MultipleSelectableButtons> {
         bool isSelected = selectedOptions.contains(option);
         return ElevatedButton(
           onPressed: () {
-            setState(() {
-              if (isSelected) {
-                selectedOptions.remove(option);
-              } else {
-                selectedOptions.add(option);
-              }
-            });
+            if (widget.tappable) {
+              setState(() {
+                if (isSelected) {
+                  selectedOptions.remove(option);
+                } else {
+                  selectedOptions.add(option);
+                }
+              });
+            }
             widget.onSelected(selectedOptions);
           },
           style: ElevatedButton.styleFrom(

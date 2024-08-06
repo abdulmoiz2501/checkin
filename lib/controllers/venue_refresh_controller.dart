@@ -24,7 +24,7 @@ class VenueRefreshController extends GetxController {
     isLoading(true);
 
     String url =
-        '$api/api/v1/venues/getVenues?placeid=${currentPlaceId.value}&userId=${FirebaseAuth.instance.currentUser?.uid}';
+        '$api/api/v1/venues/getVenues?placeid=${currentPlaceId.value}&userId=${FirebaseAuth.instance.currentUser?.uid}&rangeFlag=${peopleOutsideRange.value}';
     if (isFirstHitDone.value) {
       url += '&ageRange=${minAge.value.toInt()}-${maxAge.value.toInt()}';
     }
@@ -33,7 +33,8 @@ class VenueRefreshController extends GetxController {
       url += '&checkInGoals=${checkinGoals.join(',')}';
       //
     }
-    print(url);
+
+    print('This is teh url of the venueRefresh: $url');
     final currentUser = FirebaseAuth.instance.currentUser;
 
     try {

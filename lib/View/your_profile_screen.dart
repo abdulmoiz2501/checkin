@@ -1,4 +1,5 @@
 import 'package:checkin/View/SubscriptionScreen.dart';
+import 'package:checkin/widgets/multiple_Selectable_Buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
@@ -9,8 +10,6 @@ import '../widgets/selectable_button.dart';
 
 class YourProfileScreen extends StatelessWidget {
   YourProfileScreen({super.key});
-
-
 
   final ViewProfileController controller = Get.put(ViewProfileController());
   RxString selectedOption = ''.obs;
@@ -78,8 +77,8 @@ class YourProfileScreen extends StatelessWidget {
                                       user.gender.toLowerCase() == 'female'
                                           ? 'assets/female.png'
                                           : user.gender.toLowerCase() == 'male'
-                                          ? 'assets/male.png'
-                                          : 'assets/binary.png',
+                                              ? 'assets/male.png'
+                                              : 'assets/binary.png',
                                       height: 12,
                                       width: 12,
                                     ),
@@ -105,7 +104,6 @@ class YourProfileScreen extends StatelessWidget {
                                     fontFamily: 'SFProDisplay',
                                   ),
                                 ),
-
                                 SizedBox(
                                   height:
                                       MediaQuery.of(context).size.height * 0.01,
@@ -217,25 +215,26 @@ class YourProfileScreen extends StatelessWidget {
                       ).marginSymmetric(vertical: 6.0),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 7.0),
-                        child: Obx(
-                          () => SelectableButtonGroup(
-                            options: [
-                              'Friends',
-                              'Networking',
-                              'Dates',
-                              'Love',
-                              'Casual',
-                              'Food',
-                              'Explore city',
-                              'Parties',
-                              'Pub crawls',
-                              'Drinking buddies'
-                            ],
-                            initialSelected: selectedOption.value,
-                            onSelected: (value) {
-                              selectedOption.value = value;
-                            },
-                          ),
+                        child: MultipleSelectableButtons(
+                          tappable: false,
+                          options: [
+                            'Friends',
+                            'Networking',
+                            'Dates',
+                            'Love',
+                            'Casual',
+                            'Food',
+                            'Explore city',
+                            'Parties',
+                            'Pub crawls',
+                            'Drinking buddies'
+                          ],
+                          initialSelected: user.checkInGoals == null
+                              ? []
+                              : user.checkInGoals!.isNotEmpty
+                                  ? user.checkInGoals
+                                  : [],
+                          onSelected: (value) {},
                         ),
                       ),
                       SizedBox(
@@ -251,7 +250,9 @@ class YourProfileScreen extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        user.showSexualOrientation?'Shown on Profile':  'Not shown on profile',
+                        user.showSexualOrientation
+                            ? 'Shown on Profile'
+                            : 'Not shown on profile',
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w400,
@@ -260,18 +261,17 @@ class YourProfileScreen extends StatelessWidget {
                         ),
                       ),
                       ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                foregroundColor: textInvertColor,
-                                backgroundColor: textBlackColor,
-                                side: BorderSide(color: textBlackColor),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                              ),
-                              child: Text(user.sex),
-                      )
-                          .marginSymmetric(vertical: 5.0),
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: textInvertColor,
+                          backgroundColor: textBlackColor,
+                          side: BorderSide(color: textBlackColor),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                        ),
+                        child: Text(user.sex),
+                      ).marginSymmetric(vertical: 5.0),
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.03,
                       ),
@@ -342,7 +342,7 @@ class YourProfileScreen extends StatelessWidget {
                           ),
                           child: ElevatedButton(
                             onPressed: () {
-                              Get.to(()=> SubscriptionScreen());
+                              Get.to(() => SubscriptionScreen());
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.transparent,

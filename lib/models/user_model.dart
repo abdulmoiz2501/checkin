@@ -52,6 +52,7 @@ class UserModel {
   final DateTime updatedAt;
   final List<UserPicture> userPictures;
   final bool? subscribed;
+  final List<String>? checkInGoals;
 
   UserModel({
     required this.showSexualOrientation,
@@ -71,6 +72,7 @@ class UserModel {
     required this.updatedAt,
     required this.userPictures,
     this.subscribed,
+    this.checkInGoals,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -94,6 +96,9 @@ class UserModel {
           .map((picture) => UserPicture.fromJson(picture))
           .toList(),
       subscribed: json['subscribed'],
+      checkInGoals: json['CheckInGoals'] != null
+          ? List<String>.from(json['CheckInGoals'])
+          : null,
     );
   }
 
@@ -115,6 +120,7 @@ class UserModel {
       'updatedAt': updatedAt.toIso8601String(),
       'UserPictures': userPictures.map((picture) => picture.toJson()).toList(),
       'subscribed': subscribed,
+      'CheckInGoals': checkInGoals,
     };
   }
 }
