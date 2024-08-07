@@ -23,7 +23,8 @@ class _ProfileTabBArScreenState extends State<ProfileTabBArScreen> {
       length: 2,
       child: Scaffold(
           appBar: AppBar(
-            leading: IconButton(
+            automaticallyImplyLeading: false,
+  /*          leading: IconButton(
               icon: SizedBox(
                 width: 20,
                 height: 20,
@@ -32,7 +33,7 @@ class _ProfileTabBArScreenState extends State<ProfileTabBArScreen> {
               onPressed: () {
                 Get.back();
               },
-            ),
+            ),*/
           ),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

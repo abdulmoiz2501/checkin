@@ -48,9 +48,9 @@ class _LikeScreenState extends State<LikeScreen> {
   Future<void> _getCurrentUserId() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      setState(() {
+
         currentUserId = user.uid;
-      });
+
       print('Current User ID: ${user.uid}');
       getRequestController.fetchRequests(user.uid);
     }
