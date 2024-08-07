@@ -39,18 +39,19 @@ class _LikeScreenBlurState extends State<LikeScreenBlur> {
   @override
   void initState() {
     super.initState();
-/*    SchedulerBinding.instance.addPostFrameCallback((_)async {
-      await _getCurrentUserId();
-    });*/
-    _getCurrentUserId();
+ // SchedulerBinding.instance.addPostFrameCallback((_)async {
+ //      await _getCurrentUserId();
+
+ //    });
+    // _getCurrentUserId();
   }
 
   Future<void> _getCurrentUserId() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      setState(() {
+
         currentUserId = user.uid;
-      });
+
       print('Current User ID: ${user.uid}');
       getRequestController.fetchRequests(user.uid);
     }
@@ -83,7 +84,7 @@ class _LikeScreenBlurState extends State<LikeScreenBlur> {
                 request.sender.uid,
                 acceptRequestController,
                 rejectRequestController,
-                currentUserId!,
+                FirebaseAuth.instance.currentUser!.uid,
                 getRequestController,
               );
             },
