@@ -343,8 +343,9 @@ class _OtpScreenLoginState extends State<OtpScreenLogin> {
                           setState(() {
                             _isLoading = false;
                           });
-                          showCustomSnackbar(
-                              context, Colors.red, "Failed to sign in");
+                          Get.snackbar("Error", "Failed to sign in", backgroundColor: Colors.red);
+                          /*showCustomSnackbar(
+                              context, Colors.red, "Failed to sign in");*/
                         }
                       }
                     } catch (e) {
@@ -382,7 +383,7 @@ class _OtpScreenLoginState extends State<OtpScreenLogin> {
                         child: Container(
                           alignment: Alignment.center,
                           child: Text(
-                            "Continue",
+                            "Verify",
                             style: TextStyle(
                               color: textInvertColor,
                               fontFamily: 'SFProDisplay',

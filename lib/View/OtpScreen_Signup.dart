@@ -59,7 +59,7 @@ class _OtpScreenSignUpState extends State<OtpScreenSignUp> {
         FocusScope.of(context).unfocus(); // to hide the keyboard if the last field is filled
       }
     }
-    checkInput();
+    //checkInput();
   }
 
   Future <void> checkInput() async {
@@ -286,7 +286,6 @@ class _OtpScreenSignUpState extends State<OtpScreenSignUp> {
             ),
             child: ElevatedButton(
               onPressed: () async {
-
                 String otp = controllers.map((controller) => controller.text).join('');
                 //_verifyOtp(otp);
                 await checkInput();
