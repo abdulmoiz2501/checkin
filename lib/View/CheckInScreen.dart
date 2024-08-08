@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 
 import '../constants/colors.dart';
 import '../controllers/check_in_controller.dart';
@@ -19,7 +20,8 @@ class _CheckinScreenState extends State<CheckinScreen> {
     super.initState();
     // Navigate to the next screen after 3 seconds
     Future.delayed(Duration(seconds: 3), () {
-      Get.to(() => VenueHomePopulated()); // Update this to your actual next screen
+      Get.to(
+          () => VenueHomePopulated()); // Update this to your actual next screen
     });
   }
 
@@ -40,7 +42,7 @@ class _CheckinScreenState extends State<CheckinScreen> {
                 // Logo
                 Image.asset(
                   'assets/checking_in.png',
-                  width:150,
+                  width: 150,
                   height: 150,
                 ),
                 const SizedBox(height: 20),
@@ -72,7 +74,8 @@ class _CheckinScreenState extends State<CheckinScreen> {
                           foreground: Paint()
                             ..shader = LinearGradient(
                               colors: <Color>[gradientLeft, gradientRight],
-                            ).createShader(const Rect.fromLTWH(100.0, 20.0, 200.0, 70.0)),
+                            ).createShader(
+                                const Rect.fromLTWH(100.0, 20.0, 200.0, 70.0)),
                         ),
                       ),
                       const TextSpan(
@@ -80,7 +83,8 @@ class _CheckinScreenState extends State<CheckinScreen> {
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black, // Black color for this part of the text
+                          color: Colors
+                              .black, // Black color for this part of the text
                         ),
                       ),
                     ],
@@ -90,68 +94,74 @@ class _CheckinScreenState extends State<CheckinScreen> {
 
                 const SizedBox(height: 20),
                 // Circle with emoji and text below
-            Column(
-              children: [
-                Image.asset('assets/checkin_loader.png', width: 100, height: 120),
-                SizedBox(height: 10),
-                Stack(
-                  alignment: Alignment.center,
+                Column(
                   children: [
-                    ShaderMask(
-                      shaderCallback: (Rect bounds) {
-                        return LinearGradient(
-                          colors: <Color>[gradientLeft, gradientRight],
-                        ).createShader(bounds);
-                      },
-                      child: Container(
-                        width: 87,
-                        height: 87,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white,
-                        ),
-                      ),
+                    // Image.asset('assets/checkin_loader.png', width: 100, height: 120),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.3,
+                      child: Lottie.asset(
+                          'assets/animation/checkIn-animation.json',
+                          fit: BoxFit.cover),
                     ),
-                    Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        //border: Border.all(color: Colors.white, width: 1), // Inner white border
-                        image: DecorationImage(
-                          image: NetworkImage(checkInController.venueImage.value),
-                          //image: AssetImage('assets/no_image.png'), // Path to your emoji asset
-                          fit: BoxFit.cover,
+                    SizedBox(height: 10),
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        ShaderMask(
+                          shaderCallback: (Rect bounds) {
+                            return LinearGradient(
+                              colors: <Color>[gradientLeft, gradientRight],
+                            ).createShader(bounds);
+                          },
+                          child: Container(
+                            width: 87,
+                            height: 87,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
-                      ),
+                        Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            //border: Border.all(color: Colors.white, width: 1), // Inner white border
+                            image: DecorationImage(
+                              image: NetworkImage(
+                                  checkInController.venueImage.value),
+                              //image: AssetImage('assets/no_image.png'), // Path to your emoji asset
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          top: 5,
+                          right: 5,
+                          child: Image.asset(
+                            'assets/lit.png',
+                            width: 24,
+                            height: 24,
+                          ),
+                        ),
+                      ],
                     ),
-                    Positioned(
-                      top: 5,
-                      right: 5,
-                      child: Image.asset(
-                        'assets/lit.png',
-                        width: 24,
-                        height: 24,
+                    const SizedBox(height: 10),
+                    Text(
+                      checkInController.venueTitle.value,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'SFProDisplay',
                       ),
                     ),
                   ],
-
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  checkInController.venueTitle.value,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'SFProDisplay',
-                  ),
                 ),
               ],
             ),
-            ],
           ),
         ),
-      ),
       ),
     );
   }

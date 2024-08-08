@@ -1,5 +1,6 @@
 import 'package:checkin/View/NewConnection.dart';
 import 'package:checkin/View/SubscriptionScreen.dart';
+import 'package:checkin/View/animation_testing.dart';
 import 'package:checkin/models/user_model.dart';
 import 'package:checkin/models/view_profile_model.dart';
 import 'package:checkin/utils/device/device.dart';
@@ -118,6 +119,7 @@ class VenueHomePopulated extends StatelessWidget {
               IconButton(
                 icon: Image.asset('assets/bell.png'), // Path to your bell icon
                 onPressed: () {
+                  // Get.to(AnimationTesting(  ));
                   Get.to(() => NewConnectionScreen());
                 },
               ),

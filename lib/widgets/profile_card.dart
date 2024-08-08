@@ -4,6 +4,7 @@ import 'package:checkin/widgets/user_detail_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:lottie/lottie.dart';
 
 import 'bottom_modal_sheet.dart';
 import 'custom_pop_up.dart';
@@ -40,6 +41,7 @@ class _ProfileCardState extends State<ProfileCard> {
   OverlayEntry? _popupDialog;
   String? _selectedOption;
   bool showSendTick = false;
+  bool _isAnimating = false;
 
   void _showOptions(BuildContext context) {
     if (_popupDialog != null) {
@@ -224,6 +226,22 @@ class _ProfileCardState extends State<ProfileCard> {
                     },
                   ),
                 ),
+                if (_isAnimating)
+                  Positioned.fill(
+                    child: Lottie.asset(
+                      height: 300,
+                      'assets/animation/like_animation.json',
+                      repeat: true,
+                      fit: BoxFit.cover,
+                      onLoaded: (composition) {
+                        Future.delayed(composition.duration, () {
+                          setState(() {
+                            _isAnimating = false;
+                          });
+                        });
+                      },
+                    ),
+                  ),
                 Positioned(
                   top: 0,
                   left: 0,
@@ -322,17 +340,27 @@ class _ProfileCardState extends State<ProfileCard> {
                                 onButtonPressed: () {
                                   setState(() {
                                     showSendTick = true;
+                                    _isAnimating = true;
                                   });
                                   // Handle continue button press
                                   //Get.back();
                                 },
                                 onBelowButtonPressed: () {
+                                  setState(() {
+                                    _isAnimating = true;
+                                  });
+
                                   /// Handle "Don't show again" button press
                                   // Get.back();
                                   print("Don't show again tapped");
                                 },
                                 onGuidelinesPressed: () {
+                                  setState(() {
+                                    _isAnimating = true;
+                                  });
+
                                   ///TODO route to guidelines
+                                  ///
                                 },
                                 showGuidelines: true,
                               );
