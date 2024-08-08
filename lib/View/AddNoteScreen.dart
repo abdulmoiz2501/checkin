@@ -230,7 +230,8 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                     });
                     Get.offAll(() => GetLocationScreen());
                   }else{
-                    showCustomSnackbar(context, Colors.red, 'Error signing up user 1');
+                    Get.snackbar("Error", "Failed to sign up", backgroundColor: Colors.red);
+                   /* showCustomSnackbar(context, Colors.red, 'Error signing up user');*/
                     setState(() {
                       _isLoading = false;
                     });

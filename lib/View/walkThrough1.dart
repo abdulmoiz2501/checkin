@@ -66,10 +66,12 @@ class _WalkThrough1State extends State<WalkThrough1> {
                 ),
                 controller: _swiperController,
                 onIndexChanged: (index) {
+                  print(index);
                   setState(() {
                     _currentIndex = index;
                   });
                 },
+                loop: false,
               ),
             ),
           ),
