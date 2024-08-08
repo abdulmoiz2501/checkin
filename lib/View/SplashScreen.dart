@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:checkin/constants/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 import '../constants/ScreenUtils.dart';
 import 'walkthrough1.dart'; // Import your WalkThrough1 screen
@@ -28,6 +29,8 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: Container(
+        height: double.infinity,
+        width: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [gradientLeft, gradientRight],
@@ -36,21 +39,25 @@ class _SplashScreenState extends State<SplashScreen> {
             stops: [0.6, 1],
           ),
         ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 200 * ScreenUtil.textScaleFactor,
-                child: Image.asset('assets/logo_splash.png'),
-              ),
-              SizedBox(
-                width: 200 * ScreenUtil.textScaleFactor,
-                child: Image.asset('assets/logo_splash_mirror.png'),
-              ),
-            ],
-          ),
+        child: Lottie.asset(
+          'assets/animation/Splashscreen_logo_Animation.json',
+          fit: BoxFit.cover,
         ),
+        // child: Center(
+        //   child: Column(
+        //     mainAxisAlignment: MainAxisAlignment.center,
+        //     children: [
+        //       SizedBox(
+        //         width: 200 * ScreenUtil.textScaleFactor,
+        //         child: Image.asset('assets/logo_splash.png'),
+        //       ),
+        //       SizedBox(
+        //         width: 200 * ScreenUtil.textScaleFactor,
+        //         child: Image.asset('assets/logo_splash_mirror.png'),
+        //       ),
+        //     ],
+        //   ),
+        // ),
       ),
     );
   }
