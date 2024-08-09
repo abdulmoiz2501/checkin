@@ -57,10 +57,10 @@ class _MapWidgetState extends State<MapWidget> {
 
 
   Future<void> _initializeData() async {
-    String radius = '250'; // 500 meter km radius
+    String radius = '100'; // 500 meter km radius
     await userController.fetchUser(FirebaseAuth.instance.currentUser!.uid);
     if(userController.user.value.subscribed != false ){
-      radius = '500';
+      radius = '250';
     }
     await _loadCustomIcons();
     LatLng userLocation = await _getUserLocation();

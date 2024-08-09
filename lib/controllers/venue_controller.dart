@@ -23,7 +23,21 @@ class VenueController extends GetxController {
       Position position = await _determinePosition();
       print('User location: ${position.latitude}, ${position.longitude}');
       // Fetch nearby venues using the PlacesService
-      var nearbyVenues = await _placesService.getNearbyVenues(position, type);
+
+
+      List<Venue> nearbyVenues = [];
+      if (type == 'all') {
+        // Fetch multiple venue types
+        List<String> types = ['bar', 'cafe', 'gym', 'museum', 'restaurant'];
+        for (var venueType in types) {
+          var venues = await _placesService.getNearbyVenues(position, venueType);
+          nearbyVenues.addAll(venues);
+        }
+      } else {
+        // Fetch nearby venues of a single type
+        nearbyVenues = await _placesService.getNearbyVenues(position, type);
+      }
+     // var nearbyVenues = await _placesService.getNearbyVenues(position, type);
       // Update the venues list with the fetched data
       venues.assignAll(nearbyVenues);
       print('Fetched ${nearbyVenues.length} venues');

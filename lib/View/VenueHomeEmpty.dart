@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
-import '../constants/colors.dart'; // Ensure this file contains the gradientLeft and gradientRight variables
+import '../constants/colors.dart';
 
 class VenueHomeEmpty extends StatelessWidget {
   const VenueHomeEmpty({Key? key}) : super(key: key);
