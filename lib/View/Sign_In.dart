@@ -107,15 +107,15 @@ class _SigninState extends State<Signin> {
     }
   }
 
-  Future<void> _checkCompletionStatusAndNavigate() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool isCompleted = prefs.getBool('isCompleted') ?? false;
-    if (isCompleted) {
-      Get.to(() => RulesScreen());
-    } else {
-      Get.to(() => NameScreen());
-    }
-  }
+  // Future<void> _checkCompletionStatusAndNavigate() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   bool isCompleted = prefs.getBool('isCompleted') ?? false;
+  //   if (isCompleted) {
+  //     Get.to(() => RulesScreen());
+  //   } else {
+  //     Get.to(() => NameScreen());
+  //   }
+  // }
 
 
   @override
@@ -326,7 +326,7 @@ class _SigninState extends State<Signin> {
                     User? user = await _authService.logInWithGoogle();
                     if (user != null) {
                       _showSnackBar(context, Colors.green, 'Successfully signed in with Google.');
-                      await _checkCompletionStatusAndNavigate();
+                      //await _checkCompletionStatusAndNavigate();
                     } else {
                       print('Google sign-in canceled');
                       _showSnackBar(context, Colors.red, 'Google sign-in canceled.');

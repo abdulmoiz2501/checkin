@@ -57,10 +57,11 @@ class _VenueScreenState extends State<VenueScreen> {
               scrollDirection: Axis.horizontal,
               child: SelectableButtonGroup(
                 options: [
+                  'All',
                   'Bars',
                   'Cafe',
                   'Gym',
-                  'Mueseum',
+                  'Museum',
                   'Restaurants',
                 ],
                 initialSelected: selectedOption,
@@ -68,26 +69,32 @@ class _VenueScreenState extends State<VenueScreen> {
                   setState(() {
                     selectedOption = value.toLowerCase();
                     String apiType;
-                    switch (selectedOption) {
-                      case 'bars':
-                        apiType = 'bar';
-                        break;
-                      case 'cafe':
-                        apiType = 'cafe';
-                        break;
-                      case 'gym':
-                        apiType = 'gym';
-                        break;
-                      case 'museum':
-                        apiType = 'museum';
-                        break;
-                      case 'clubs':
-                        apiType = 'night_club';
-                        break;
-                      case 'restaurants':
-                      default:
-                        apiType = 'restaurant';
-                        break;
+                    if(selectedOption == 'all')
+                      {
+                        apiType  = 'all';
+                      }
+                    else{
+                      switch (selectedOption) {
+                        case 'bars':
+                          apiType = 'bar';
+                          break;
+                        case 'cafe':
+                          apiType = 'cafe';
+                          break;
+                        case 'gym':
+                          apiType = 'gym';
+                          break;
+                        case 'museum':
+                          apiType = 'museum';
+                          break;
+                        case 'clubs':
+                          apiType = 'night_club';
+                          break;
+                        case 'restaurants':
+                        default:
+                          apiType = 'restaurant';
+                          break;
+                      }
                     }
                     venueController.fetchNearbyVenues(apiType);
                   });

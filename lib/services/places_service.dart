@@ -12,10 +12,10 @@ class PlacesService {
 final UserController userController = Get.find();
 
   Future<List<Venue>> getNearbyVenues(Position position, String type) async {
-    String radius = '250'; // 500 meter km radius
+    String radius = '100'; // 500 meter km radius
     await userController.fetchUser(FirebaseAuth.instance.currentUser!.uid);
     if(userController.user.value.subscribed != false ){
-  radius = '500';
+  radius = '250';
     }
     final url = Uri.parse(
       'https://maps.googleapis.com/maps/api/place/nearbysearch/json'
